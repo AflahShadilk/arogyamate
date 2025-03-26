@@ -1,0 +1,52 @@
+name: arogyamate
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  mix: ^1.5.4
+  flutter_native_splash: ^2.4.4
+  flutter_arc_text: ^0.6.0
+  flutter_launcher_icons: ^0.14.3  
+  google_fonts: ^6.2.1
+  introduction_screen: ^3.1.16
+  icons_plus: ^5.0.0
+  hive_flutter: ^1.1.0
+  hive_generator: ^2.0.1
+  hive: ^2.2.3
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  curved_navigation_bar: ^1.0.6
+  file_picker: ^9.0.2
+  google_nav_bar: ^5.0.7
+  line_icons: ^2.0.3
+  shared_preferences: ^2.5.2
+  provider: ^6.1.2
+icons_plus: ^5.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.15
+
+flutter_launcher_icons:  
+  android: true
+  ios: true
+  image_path: "assets/icon/Health Icon.png"
+  adaptive_icon_background: "#ffffff"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icon/
