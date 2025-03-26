@@ -6,6 +6,7 @@ import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -59,7 +60,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                     radius: 30,
                     backgroundColor: Colors.green,
                     backgroundImage: widget.doctor?.imagePath != null
-                        ? FileImage(File(widget.doctor!.imagePath!))
+                        ?kIsWeb?NetworkImage(widget.doctor!.imagePath!): FileImage(File(widget.doctor!.imagePath!))
                         : null,
                     child: widget.doctor?.imagePath == null
                         ? Icon(Icons.person, color: Colors.white, size: 30)
@@ -243,8 +244,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                             child: Center(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // print('starting${startTime}');
-                                  // print('ending${endTime}');
+                                
                                   settingDoctorStatus(
                                     widget.doctor!.id!,
                                     widget.doctor!,

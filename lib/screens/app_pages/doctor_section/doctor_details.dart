@@ -3,6 +3,7 @@ import 'package:arogyamate/data_base/functions/db_appoinment.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
+import 'package:arogyamate/screens/app_pages/doctor_section/pdfviewer.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
@@ -20,6 +21,13 @@ class DoctorView extends StatefulWidget {
 }
 
 class _DoctorViewState extends State<DoctorView> {
+  String? pdfPath;
+  @override
+  void initState() {
+    super.initState();
+    pdfPath = widget.doctor!.newFilePath!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,10 +136,33 @@ class _DoctorViewState extends State<DoctorView> {
             _buildInfoTile(Icons.attach_money, 'Fees', widget.doctor?.fees),
             _buildInfoTile(
                 Icons.health_and_safety, 'Status', widget.doctor?.status),
-                SizedBox(
-                   width: isPhone(context) ? s.width * 0.4 : s.width*0.3 ,
-                  //---------------------------------------------------------------------------------
-                )
+            SizedBox(
+              width: isPhone(context) ? s.width * 0.22: s.width * 0.25,
+              height: isPhone(context) ? s.height * 0.07 : s.height * 0.1,
+              child: GestureDetector(
+                onTap: () {
+                  if (pdfPath != null) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PdfViewer(filePath: pdfPath!),
+                    ));
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.teal.withOpacity(0.1),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.file_copy_rounded,
+                      color: Colors.teal,
+                      size: 28,
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

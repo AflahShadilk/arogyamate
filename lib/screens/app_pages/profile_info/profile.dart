@@ -72,63 +72,64 @@ class _AccountPageState extends State<AccountPage> {
                   SizedBox(height: isPhone ? 30 : 30),
                   _buildDarkModeToggle(context),
                   _buildProfileAvatar(isPhone),
-                  SizedBox(height: 25),
+                  SizedBox(height: isPhone ? 25 : 30),
                   _buildInfoCard(isPhone, s),
-                  SizedBox(height: 60),
+                  SizedBox(height: isPhone ? 110 : 60),
                   _buildSignOutButton(isPhone, s),
-                  SizedBox(height: 50),
+                  SizedBox(height: isPhone ? 30 : 70),
                   Container(
+                    width: isPhone?s.width:s.width,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.black87),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HelpPage()));
-                            },
-                            child: Text(
-                              'Help?',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  wordSpacing: 10),
-                            ),
+                    child: Row(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => HelpPage()));
+                          },
+                          child: Text(
+                            'Help?',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                wordSpacing: 10),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AboutUsPage()));
-                            },
-                            child: Text(
-                              'About Us',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  wordSpacing: 10),
-                            ),
+                        ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AboutUsPage()));
+                          },
+                          child: Text(
+                            'About Us',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                wordSpacing: 10),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      TermsAndConditionsPage()));
-                            },
-                            child: Text(
-                              'Terms&Conditions',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  wordSpacing: 10),
-                            ),
+                        ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    TermsAndConditionsPage()));
+                          },
+                          child: Text(
+                            'Terms&Conditions',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                wordSpacing: 10),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 20),
@@ -170,10 +171,10 @@ class _AccountPageState extends State<AccountPage> {
         CircleAvatar(
           radius: 55,
           backgroundColor: Colors.grey[300],
-          backgroundImage: (image != null)
-              ?kIsWeb?NetworkImage(image!): FileImage(File(image!))
+          backgroundImage: (image != null && image!.isNotEmpty)
+              ?(kIsWeb?NetworkImage(image!) as ImageProvider: FileImage(File(image!)))
               : AssetImage('assets/images/hospital.jpg'),
-          child: (image == null )
+          child: (image == null ||image!.isEmpty )
               ? Icon(Icons.photo_camera_outlined,
                   size: 40, color: Colors.black54)
               : SizedBox(),

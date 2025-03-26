@@ -1,4 +1,6 @@
 import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/utilities/constant/constants.dart';
+import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
 
 class DoctorSearchFilter extends StatefulWidget {
@@ -10,8 +12,8 @@ class DoctorSearchFilter extends StatefulWidget {
     required this.isPhone,
     required this.onFiltersSelected,
     super.key,
-    this.showAgefilter=true,
-    this.showFeesfilter=true,
+    this.showAgefilter = true,
+    this.showFeesfilter = true,
   });
 
   @override
@@ -93,80 +95,86 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
             ),
           ),
           SizedBox(height: 12),
-          Row(
-            children: [
-              
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Department',
-                  departments,
-                  selectedDepartment,
-                  (val) => setState(() {
-                    selectedDepartment = val;
-                    applyFilters();
-                  }),
+          SizedBox(
+            width: isPhone(context) ? s.width * 0.9 : s.width * 0.5,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: _buildDropdown(
+                    'Department',
+                    departments,
+                    selectedDepartment,
+                    (val) => setState(() {
+                      selectedDepartment = val;
+                      applyFilters();
+                    }),
+                  ),
                 ),
-              ),
-              SizedBox(width: 50),
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Qualification',
-                  qualifications,
-                  selectedQualification,
-                  (val) => setState(() {
-                    selectedQualification = val;
-                    applyFilters();
-                  }),
+                Spacer(),
+                SizedBox(
+                  width: 120,
+                  child: _buildDropdown(
+                    'Qualification',
+                    qualifications,
+                    selectedQualification,
+                    (val) => setState(() {
+                      selectedQualification = val;
+                      applyFilters();
+                    }),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-if(widget.showAgefilter||widget.showFeesfilter)
-          Row(
-            children: [
-              if(widget.showAgefilter)
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Age',
-                  ages.map((e) => e.toString()).toList(),
-                  selectedAge?.toString(),
-                  (val) => setState(() {
-                    selectedAge = val != null ? int.tryParse(val) : null;
-                    applyFilters();
-                  }),
-                ),
+          if (widget.showAgefilter || widget.showFeesfilter)
+            SizedBox(
+              width: isPhone(context) ? s.width * 0.9 : s.width * 0.5,
+              child: Row(
+                children: [
+                  if (widget.showAgefilter)
+                    SizedBox(
+                      width: 120,
+                      child: _buildDropdown(
+                        'Age',
+                        ages.map((e) => e.toString()).toList(),
+                        selectedAge?.toString(),
+                        (val) => setState(() {
+                          selectedAge = val != null ? int.tryParse(val) : null;
+                          applyFilters();
+                        }),
+                      ),
+                    ),
+                  if (widget.showAgefilter && widget.showFeesfilter) Spacer(),
+                  if (widget.showFeesfilter)
+                    SizedBox(
+                      width: 120,
+                      child: _buildDropdown(
+                        'Fees',
+                        fees.map((e) => e.toString()).toList(),
+                        selectedFees?.toString(),
+                        (val) => setState(() {
+                          selectedFees =
+                              val != null ? double.tryParse(val) : null;
+                          applyFilters();
+                        }),
+                      ),
+                    ),
+                ],
               ),
-              if(widget.showAgefilter&&widget.showFeesfilter)
-              SizedBox(width: 50),
-              if(widget.showFeesfilter)
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Fees',
-                  fees.map((e) => e.toString()).toList(),
-                  selectedFees?.toString(),
-                  (val) => setState(() {
-                    selectedFees = val != null ? double.tryParse(val) : null;
-                    applyFilters();
-                  }),
-                ),
-              ),
-            ],
-          ),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildDropdown(
-      String label, List<String> items, String? selectedValue, Function(String?) onChanged) {
+  Widget _buildDropdown(String label, List<String> items, String? selectedValue,
+      Function(String?) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(label,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         SizedBox(height: 5),
         DropdownButton<String>(
           value: selectedValue,

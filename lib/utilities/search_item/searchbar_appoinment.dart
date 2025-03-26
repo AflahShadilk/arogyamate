@@ -1,4 +1,6 @@
 import 'package:arogyamate/data_base/functions/db_appoinment.dart';
+import 'package:arogyamate/utilities/constant/constants.dart';
+import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
 
 class CommonSearch1 extends StatefulWidget {
@@ -194,60 +196,67 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
             ),
           ),
           SizedBox(height: 12),
-          Row(
-            children: [
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Department',
-                  departments,
-                  selectedDepartment,
-                  (val) => setState(() {
-                    selectedDepartment = val;
-                    applyFilters();
-                  }),
-                ),
-              ),
-              SizedBox(width: 50),
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                  'Doctor',
-                  doctor,
-                  selectedDoctor,
-                  (val) => setState(() {
-                    selectedDoctor = val;
-                    applyFilters();
-                  }),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 120,
-                child: _buildDropdown(
-                    'Blood Group',
-                    blood,
-                    selectedBlood,
-                    (val) => setState(() {
-                          selectedBlood = val;
-                          applyFilters();
-                        })),
-              ),
-              SizedBox(width: 50),
-              SizedBox(
+          SizedBox(
+            width: isPhone(context)?s.width*0.9:s.width*0.5,
+            child: Row(
+              
+              children: [
+                SizedBox(
                   width: 120,
                   child: _buildDropdown(
-                      "Address",
-                      address,
-                      selectedAddress,
+                    'Department',
+                    departments,
+                    selectedDepartment,
+                    (val) => setState(() {
+                      selectedDepartment = val;
+                      applyFilters();
+                    }),
+                  ),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 120,
+                  child: _buildDropdown(
+                    'Doctor',
+                    doctor,
+                    selectedDoctor,
+                    (val) => setState(() {
+                      selectedDoctor = val;
+                      applyFilters();
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: isPhone(context)?s.width*0.9:s.width*0.5,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: _buildDropdown(
+                      'Blood Group',
+                      blood,
+                      selectedBlood,
                       (val) => setState(() {
-                            selectedAddress = val;
-                                applyFilters();
-                          }))),
-            ],
+                            selectedBlood = val;
+                            applyFilters();
+                          })),
+                ),
+                Spacer(),
+                SizedBox(
+                    width: 120,
+                    child: _buildDropdown(
+                        "Address",
+                        address,
+                        selectedAddress,
+                        (val) => setState(() {
+                              selectedAddress = val;
+                                  applyFilters();
+                            }))),
+              ],
+            ),
           ),
         ],
       ),

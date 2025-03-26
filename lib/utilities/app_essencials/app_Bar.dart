@@ -4,7 +4,7 @@ AppBar appBar(
   BuildContext context,
   String title, {
   bool showDeleteButton = true,
-  Function()? deleteFunction, // Optional function
+  Function()? deleteFunction, 
 }) {
   return AppBar(
     elevation: 0,

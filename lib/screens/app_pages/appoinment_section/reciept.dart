@@ -261,8 +261,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                     ),
                                     const SizedBox(height: 8),
                                     Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      
                                       children: [
                                         Expanded(
                                           child: Column(
@@ -279,6 +278,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                             ],
                                           ),
                                         ),
+                                        
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
