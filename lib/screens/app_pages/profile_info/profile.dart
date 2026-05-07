@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arogyamate/core/session/session_manager.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/about_us.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/help.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/terms_conditions.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -26,19 +26,16 @@ class _AccountPageState extends State<AccountPage> {
     getText();
   }
 
-  getImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    image = prefs.getString('image') ?? '';
+  Future<void> getImage() async {
+    image = await SessionManager.getProfileImage();
     setState(() {});
   }
 
-  String? image = '';
-  getText() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? image;
 
-    textt = prefs.getString('name') ?? '';
-    id = prefs.getString('id') ?? '';
+  Future<void> getText() async {
+    textt = await SessionManager.getHospitalName();
+    id = await SessionManager.getHospitalId();
     setState(() {});
   }
 
@@ -309,27 +306,20 @@ class _AccountPageState extends State<AccountPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Sign Out'),
-            content: Text('Are you sure?'),
+            title: const Text('Sign Out'),
+            content: const Text('Are you sure?'),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('No')),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('No')),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text('Yes')),
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Yes')),
             ],
           );
         });
-    // ignore: unrelated_type_equality_checks
     if (signOut == true) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('saveKey', false);
-     await prefs.remove('saveKey');
+      await SessionManager.logout();
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => SelectionPage()));

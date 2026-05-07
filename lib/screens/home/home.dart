@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:arogyamate/Data_Base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/core/session/session_manager.dart';
+import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctor_details.dart';
 import 'package:arogyamate/utilities/app_essencials/toggles.dart';
@@ -8,7 +9,6 @@ import 'package:arogyamate/utilities/search_item/deparment_searchFilter.dart';
 import 'package:arogyamate/utilities/search_item/searchbar_doctor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -40,11 +40,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  getImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.getString('image');
-
-    image = prefs.getString('image');
+  Future<void> getImage() async {
+    image = await SessionManager.getProfileImage();
     setState(() {});
   }
 

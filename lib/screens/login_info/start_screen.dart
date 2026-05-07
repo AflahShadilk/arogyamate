@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:arogyamate/main.dart';
+import 'package:arogyamate/core/session/session_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +7,6 @@ import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/reusable_bottomSheet.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
  
 class SelectionPage extends StatefulWidget {
@@ -207,18 +206,18 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Future<void> OnPress() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // ignore: unnecessary_null_comparison
-    if (profileImage != null && entryName.text.isNotEmpty && entryId.text.isNotEmpty) {
-      prefs.setString('image', profileImage!.path);
-      prefs.setString('name', entryName.text);
-      prefs.setString('id', entryId.text);
+    if (profileImage != null &&
+        entryName.text.isNotEmpty &&
+        entryId.text.isNotEmpty) {
+      await SessionManager.saveLogin(
+        image: profileImage!.path,
+        name: entryName.text,
+        id: entryId.text,
+      );
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const MainPage()),
       );
-      await prefs.setBool(saveKey, true);
     }
   }
 }

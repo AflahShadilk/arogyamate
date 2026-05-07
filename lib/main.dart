@@ -12,7 +12,6 @@ import 'package:arogyamate/screens/login_info/splash_screen.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 
 
-const saveKey = 'UserLoggedIn';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

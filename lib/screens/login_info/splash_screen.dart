@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:math';
+import 'package:arogyamate/core/session/session_manager.dart';
 import 'package:arogyamate/screens/login_info/start_screen.dart';
 import 'package:arogyamate/screens/login_info/welcome_screen.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_arc_text/flutter_arc_text.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,19 +29,22 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 3),()async{await getLoggCheck();});
   }
  
-  Future <void> getLoggCheck() async{
-    final SharedPreferences prefs=await SharedPreferences.getInstance();
-    final bool hasSeen=prefs.getBool('welcome')??false;
-    final bool userLoggin=prefs.getBool(saveKey)??false;
-    if(!mounted) return;
-    if(!hasSeen){
+  Future<void> getLoggCheck() async {
+    final bool hasSeen = await SessionManager.hasSeenWelcome();
+    final bool userLoggedIn = await SessionManager.isLoggedIn();
+    if (!mounted) return;
+    if (!hasSeen) {
       Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => WelcomePage()),);
-    }else if(userLoggin){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainPage()));
-    }else{
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>SelectionPage()));
-
+        MaterialPageRoute(builder: (context) => WelcomePage()),
+      );
+    } else if (userLoggedIn) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => SelectionPage()),
+      );
     }
   }
   @override
