@@ -9,7 +9,8 @@ import 'package:arogyamate/data_base/models/department_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/login_info/splash_screen.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
-import 'package:arogyamate/utilities/constant/theme_provid.dart';
+import 'package:arogyamate/core/theme/app_theme.dart';
+import 'package:arogyamate/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -62,8 +63,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             themeMode: themeProvider.themeMode,
-            theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
             home: const SplashScreen(),
           );
         },

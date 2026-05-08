@@ -5,7 +5,7 @@ import 'package:arogyamate/screens/app_pages/profile_info/about_us.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/help.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/terms_conditions.dart';
 import 'package:arogyamate/screens/login_info/start_screen.dart';
-import 'package:arogyamate/utilities/constant/theme_provid.dart';
+import 'package:arogyamate/core/theme/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,8 +43,6 @@ class _AccountPageState extends State<AccountPage> {
   String? id = '';
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
-    final themeProvider = Provider.of<ThemeProvider>(context);
     Size s = MediaQuery.of(context).size;
     bool isPhone = s.width < 600;
 
@@ -67,7 +65,10 @@ class _AccountPageState extends State<AccountPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: isPhone ? 30 : 30),
-                  _buildDarkModeToggle(context),
+                  const Align(
+                    alignment: Alignment.topRight,
+                    child: ThemeToggleButton(),
+                  ),
                   _buildProfileAvatar(isPhone),
                   SizedBox(height: isPhone ? 25 : 30),
                   _buildInfoCard(isPhone, s),
@@ -139,27 +140,6 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _buildDarkModeToggle(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 10),
-        child: IconButton(
-          icon: Icon(
-            Icons.dark_mode,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.grey[800],
-            size: 28,
-          ),
-          onPressed: () {
-            Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-          },
-          tooltip: 'Dark Mode',
-        ),
-      ),
-    );
-  }
 
   Widget _buildProfileAvatar(bool isPhone) {
     return Stack(
