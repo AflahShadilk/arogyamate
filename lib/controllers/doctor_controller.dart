@@ -14,20 +14,15 @@ class DoctorController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// Returns unique department names from the current list.
   List<String> get departments => _filterData['departments']?.cast<String>() ?? [];
 
-  /// Returns unique qualification names from the current list.
   List<String> get qualifications =>
       _filterData['qualifications']?.cast<String>() ?? [];
 
-  /// Returns unique age (years of experience) values.
   List<int> get ages => _filterData['ages']?.cast<int>() ?? [];
 
-  /// Returns unique consultation fee values.
   List<double> get fees => _filterData['fees']?.cast<double>() ?? [];
 
-  /// Loads all doctors and filter metadata from the repository.
   Future<void> loadAll() async {
     _isLoading = true;
     _error = null;
@@ -44,25 +39,21 @@ class DoctorController extends ChangeNotifier {
     }
   }
 
-  /// Adds a new doctor and refreshes.
   Future<void> add(DoctorModel model) async {
     await DoctorRepository.add(model);
     await loadAll();
   }
 
-  /// Deletes doctor by [id] and refreshes.
   Future<void> delete(int id) async {
     await DoctorRepository.delete(id);
     await loadAll();
   }
 
-  /// Updates an existing doctor and refreshes.
   Future<void> update(DoctorModel model) async {
     await DoctorRepository.update(model);
     await loadAll();
   }
 
-  /// Filters the in-memory list by name query.
   void searchByName(String query) {
     if (query.isEmpty) {
       _doctors = List.from(_all);
@@ -72,7 +63,6 @@ class DoctorController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Filters the in-memory list by department name query.
   void searchByDepartment(String query) {
     if (query.isEmpty) {
       _doctors = List.from(_all);
@@ -82,7 +72,6 @@ class DoctorController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Applies multi-criteria filter on the in-memory list.
   void filterBy({
     String? department,
     String? qualification,
@@ -103,13 +92,11 @@ class DoctorController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Resets all filters — shows all doctors again.
   void clearFilter() {
     _doctors = List.from(_all);
     notifyListeners();
   }
 
-  /// Updates shift settings for a doctor.
   Future<void> setShift(
     DoctorModel model, {
     required String? status,
@@ -121,7 +108,6 @@ class DoctorController extends ChangeNotifier {
     await loadAll();
   }
 
-  /// Updates status (leave/active) for a doctor.
   Future<void> setStatus(
     DoctorModel model, {
     required String status,
@@ -139,7 +125,6 @@ class DoctorController extends ChangeNotifier {
     await loadAll();
   }
 
-  /// Saves an attached file path on the doctor record.
   Future<void> saveFilePath(DoctorModel model, String filePath) async {
     await DoctorRepository.saveFilePath(model, filePath);
     await loadAll();

@@ -12,7 +12,6 @@ class AppointmentController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// Loads all appointments from the repository and notifies listeners.
   Future<void> loadAll() async {
     _isLoading = true;
     _error = null;
@@ -28,25 +27,21 @@ class AppointmentController extends ChangeNotifier {
     }
   }
 
-  /// Adds a new appointment and refreshes the list.
   Future<void> add(AppointModel model) async {
     await AppointmentRepository.add(model);
     await loadAll();
   }
 
-  /// Deletes appointment by [id] and refreshes the list.
   Future<void> delete(int id) async {
     await AppointmentRepository.delete(id);
     await loadAll();
   }
 
-  /// Updates an existing appointment and refreshes the list.
   Future<void> update(AppointModel model) async {
     await AppointmentRepository.update(model);
     await loadAll();
   }
 
-  /// Filters the in-memory list by name query. Call [loadAll] to reset.
   void search(String query) {
     if (query.isEmpty) {
       _appointments = List.from(_all);
@@ -56,7 +51,6 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Filters the in-memory list by optional department / doctor name.
   void filterBy({String? department, String? doctorName}) {
     _appointments = AppointmentRepository.filter(
       department: department,
@@ -65,13 +59,11 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Resets search/filter — shows all appointments again.
   void clearFilter() {
     _appointments = List.from(_all);
     notifyListeners();
   }
 
-  /// Returns unique filter options (departments, doctors, blood groups).
   Map<String, List<String>> get filterData =>
       AppointmentRepository.getFilterData();
 }

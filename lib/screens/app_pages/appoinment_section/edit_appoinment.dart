@@ -1,7 +1,7 @@
-import 'package:arogyamate/data_base/functions/db_appoinment.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 
-import 'package:arogyamate/screens/app_pages/appoinment_section/add_appoinment.dart';
+import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
@@ -11,6 +11,7 @@ import 'package:arogyamate/utilities/date_time/date_time.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class EditAppoinment extends StatefulWidget {
@@ -296,7 +297,7 @@ class _EditAppointment extends State<EditAppoinment>
       final times = time.text.trim();
 
       final updateDetails = AppointModel(name: names, age: ages, phone: phones, blood: bloodGroup, address: addresss, department: departments, doctorName: doctors, date: dates, time: times);
-     await addAppoinment(updateDetails);
+     await context.read<AppointmentController>().add(updateDetails);
       // Clear fields with animation
       setState(() {
         name.clear();

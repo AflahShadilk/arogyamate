@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/core/session/session_manager.dart';
 import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
@@ -9,6 +10,7 @@ import 'package:arogyamate/utilities/search_item/deparment_searchFilter.dart';
 import 'package:arogyamate/utilities/search_item/searchbar_doctor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -29,9 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getAllDoctors();
     getImage();
-    setState(() {});
   }
 
   void _handleToggle(int index) {
@@ -87,13 +87,25 @@ class _HomePageState extends State<HomePage> {
                           height: isPhone ? s.height * 0.2 : s.height * 0.3,
                           width: isPhone ? s.width * 0.9 : s.width * 0.6,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: kIsWeb
-                                  ? NetworkImage(image!)
-                                  : FileImage(File(image!)),
-                              fit: BoxFit.fill,
-                            ),
+                            color: Colors.grey[200],
+                            image: (image != null && image!.isNotEmpty)
+                                ? DecorationImage(
+                                    image: kIsWeb
+                                        ? NetworkImage(image!) as ImageProvider
+                                        : FileImage(File(image!)),
+                                    fit: BoxFit.fill,
+                                  )
+                                : null,
                           ),
+                          child: (image == null || image!.isEmpty)
+                              ? Center(
+                                  child: Icon(
+                                    Icons.local_hospital_rounded,
+                                    size: 60,
+                                    color: Colors.grey[400],
+                                  ),
+                                )
+                              : null,
                         ),
                       ),
                     ),
@@ -137,11 +149,15 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     Expanded(
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: _selectedShift == 0
-                            ? _doctorCardList(_dayShiftCards())
-                            : _doctorCardList(_nightShiftCards()),
+                      child: Consumer<DoctorController>(
+                        builder: (context, ctrl, _) {
+                          return AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: _selectedShift == 0
+                                ? _doctorCardList(_dayShiftCards(ctrl.doctors))
+                                : _doctorCardList(_nightShiftCards(ctrl.doctors)),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -173,8 +189,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> _dayShiftCards() {
-    return doctorNotifier.value
+  List<Widget> _dayShiftCards(List<DoctorModel> doctors) {
+    return doctors
         .where((data) {
           bool matchDepartment = selectedDepartment == null ||
               data.department == selectedDepartment;
@@ -188,14 +204,13 @@ class _HomePageState extends State<HomePage> {
         .toList();
   }
 
-  List<Widget> _nightShiftCards() {
-    return doctorNotifier.value
+  List<Widget> _nightShiftCards(List<DoctorModel> doctors) {
+    return doctors
         .where((data) {
           bool matchDepartment = selectedDepartment == null ||
               data.department == selectedDepartment;
           bool matchQualification = selectedQualification == null ||
               data.qualification == selectedQualification;
-
           bool matchShift = data.status == Constants.nightshift;
           return matchDepartment && matchQualification && matchShift;
         })
@@ -224,7 +239,15 @@ class _HomePageState extends State<HomePage> {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundImage: FileImage(File(data.imagePath!)),
+                backgroundColor: Colors.grey[300],
+                backgroundImage: (data.imagePath != null && data.imagePath!.isNotEmpty)
+                    ? (kIsWeb
+                        ? NetworkImage(data.imagePath!) as ImageProvider
+                        : FileImage(File(data.imagePath!)))
+                    : null,
+                child: (data.imagePath == null || data.imagePath!.isEmpty)
+                    ? Icon(Icons.person, size: 30, color: Colors.grey[600])
+                    : null,
               ),
               const SizedBox(width: 15),
               Expanded(

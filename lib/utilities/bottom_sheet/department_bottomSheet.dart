@@ -1,5 +1,7 @@
 //bottomsheet-------------------------------------------------------------------------------------------bottomSheet
 
+import 'package:arogyamate/controllers/department_controller.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/functions/db_functions.dart';
 import 'package:arogyamate/data_base/models/department_model.dart';
@@ -8,6 +10,7 @@ import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void showBottomSheet1(
     BuildContext context, bool isphone, TextEditingController control) {
@@ -58,14 +61,12 @@ void showBottomSheet1(
                     borderRadius: BorderRadius.circular(8),
                   color: const Color.fromARGB(31, 113, 112, 112)
                   ),
-                  child: ValueListenableBuilder(
-                    valueListenable: departmentListNotify,
-                    builder: (BuildContext context,
-                        List<DepartmentModel> departmentList, Widget? child) {
-                      return departmentListNotify.value.isEmpty
-                          ? Center(
+                  child: Consumer<DepartmentController>(
+                    builder: (context, deptCtrl, _) {
+                      return deptCtrl.departments.isEmpty
+                          ? const Center(
                               child: Text(
-                                'Not Depatment Found!',
+                                'No Department Found!',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -73,10 +74,9 @@ void showBottomSheet1(
                               ),
                             )
                           : ListView.separated(
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, int index) {
-                                final data = departmentList[index];
-
+                                final data = deptCtrl.departments[index];
                                 return GestureDetector(
                                   onTap: () {
                                     control.text = data.department;
@@ -86,24 +86,22 @@ void showBottomSheet1(
                                     title: Text(data.department),
                                     trailing: IconButton(
                                       onPressed: () async {
-                                        bool delete = await deleteDepartment(
+                                        bool deleted = await deptCtrl.delete(
                                             data.id!, data.department);
-                                        if (!delete) {
+                                        if (!deleted) {
                                           showDialog(
                                               // ignore: use_build_context_synchronously
                                               context: context,
                                               builder: (context) {
                                                 return AlertDialog(
-                                                  title: Text("Can't delete"),
-                                                  content: Text(
+                                                  title: const Text("Can't delete"),
+                                                  content: const Text(
                                                       'Doctor currently using this department'),
                                                   actions: [
                                                     TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('Ok'))
+                                                        onPressed: () =>
+                                                            Navigator.pop(context),
+                                                        child: const Text('Ok'))
                                                   ],
                                                 );
                                               });
@@ -111,7 +109,7 @@ void showBottomSheet1(
                                           control.clear();
                                         }
                                       },
-                                      icon: Icon(Icons.delete_outline,
+                                      icon: const Icon(Icons.delete_outline,
                                           color: Colors.redAccent),
                                     ),
                                   ),
@@ -119,7 +117,7 @@ void showBottomSheet1(
                               },
                               separatorBuilder: (context, index) =>
                                   const Divider(),
-                              itemCount: departmentList.length,
+                              itemCount: deptCtrl.departments.length,
                             );
                     },
                   ),
@@ -178,14 +176,12 @@ void showBottomSheetDoctor(
                     borderRadius: BorderRadius.circular(8),
                     color: const Color.fromARGB(31, 113, 112, 112)
                   ),
-                  child: ValueListenableBuilder(
-                    valueListenable: doctorNotifier,
-                    builder: (BuildContext context,
-                        List<DoctorModel> doctorsList, Widget? child) {
-                      return doctorNotifier.value.isEmpty
-                          ? Center(
+                  child: Consumer<DoctorController>(
+                    builder: (context, doctorCtrl, _) {
+                      return doctorCtrl.doctors.isEmpty
+                          ? const Center(
                               child: Text(
-                                'Not Doctor Found!',
+                                'No Doctor Found!',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -193,33 +189,34 @@ void showBottomSheetDoctor(
                               ),
                             )
                           : ListView.separated(
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, int index) {
-                                final data = doctorsList[index];
-
+                                final data = doctorCtrl.doctors[index];
                                 return GestureDetector(
                                   onTap: () {
                                     control.text = data.name!;
                                     Navigator.pop(context);
                                   },
-                                  child:data.status==Constants.leave?SizedBox(): ListTile(
-                                      title: Text(
-                                        data.name!,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      trailing: Text(data.department!,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ))),
+                                  child: data.status == Constants.leave
+                                      ? const SizedBox()
+                                      : ListTile(
+                                          title: Text(
+                                            data.name!,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          trailing: Text(data.department!,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                              ))),
                                 );
                               },
                               separatorBuilder: (context, index) =>
                                   const Divider(),
-                              itemCount: doctorsList.length,
+                              itemCount: doctorCtrl.doctors.length,
                             );
                     },
                   ),
@@ -320,8 +317,8 @@ class _BottumSheetColumnState extends State<BottumSheetColumn> {
       final name = bottomAddKey.text.trim();
       if (name.isNotEmpty) {
         final department = DepartmentModel(department: name);
-        addDepartment(department);
-
+        // ignore: use_build_context_synchronously
+        await context.read<DepartmentController>().add(department);
         bottomAddKey.clear();
         setState(() {});
       }

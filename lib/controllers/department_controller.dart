@@ -12,11 +12,9 @@ class DepartmentController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// Returns department names as plain strings (useful for dropdowns).
   List<String> get departmentNames =>
       _departments.map((d) => d.department).toList();
 
-  /// Loads all departments from the repository and notifies listeners.
   Future<void> loadAll() async {
     _isLoading = true;
     _error = null;
@@ -32,21 +30,17 @@ class DepartmentController extends ChangeNotifier {
     }
   }
 
-  /// Adds a new department and refreshes.
   Future<void> add(DepartmentModel model) async {
     await DepartmentRepository.add(model);
     await loadAll();
   }
 
-  /// Attempts to delete department by [id] and [name].
-  /// Returns `false` if doctors are still assigned to this department.
   Future<bool> delete(int id, String name) async {
     final deleted = await DepartmentRepository.delete(id, name);
     if (deleted) await loadAll();
     return deleted;
   }
 
-  /// Filters the in-memory list by department name query.
   void search(String query) {
     if (query.isEmpty) {
       _departments = List.from(_all);
@@ -56,7 +50,6 @@ class DepartmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Resets search — shows all departments again.
   void clearSearch() {
     _departments = List.from(_all);
     notifyListeners();

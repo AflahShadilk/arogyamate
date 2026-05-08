@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:arogyamate/Data_Base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctors_timing.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
@@ -8,6 +9,7 @@ import 'package:arogyamate/utilities/search_item/deparment_searchFilter.dart';
 import 'package:arogyamate/utilities/search_item/searchbar_doctor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final TextEditingController searchController = TextEditingController();
 
@@ -31,38 +33,34 @@ class _DoctorPageState extends State<DoctorPage> {
   @override
   void initState() {
     super.initState();
-    fetchFilterData().then((_) {
-      if (mounted) {
-        setState(() {
-          departments = doctorNotifier.value
-              .map((d) => d.department ?? '')
-              .where((d) => d.isNotEmpty)
-              .toSet()
-              .toList();
-
-          qualifications = doctorNotifier.value
-              .map((d) => d.qualification ?? '')
-              .where((q) => q.isNotEmpty)
-              .toSet()
-              .toList();
-
-          ages = doctorNotifier.value
-              .map((d) => d.years != null && d.years!.isNotEmpty
-                  ? int.tryParse(d.years!)
-                  : null)
-              .whereType<int>()
-              .toSet()
-              .toList();
-
-          fees = doctorNotifier.value
-              .map((d) => d.fees != null && d.fees!.isNotEmpty
-                  ? double.tryParse(d.fees!)
-                  : null)
-              .whereType<double>()
-              .toSet()
-              .toList();
-        });
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctrl = context.read<DoctorController>();
+      setState(() {
+        departments = ctrl.doctors
+            .map((d) => d.department ?? '')
+            .where((d) => d.isNotEmpty)
+            .toSet()
+            .toList();
+        qualifications = ctrl.doctors
+            .map((d) => d.qualification ?? '')
+            .where((q) => q.isNotEmpty)
+            .toSet()
+            .toList();
+        ages = ctrl.doctors
+            .map((d) => d.years != null && d.years!.isNotEmpty
+                ? int.tryParse(d.years!)
+                : null)
+            .whereType<int>()
+            .toSet()
+            .toList();
+        fees = ctrl.doctors
+            .map((d) => d.fees != null && d.fees!.isNotEmpty
+                ? double.tryParse(d.fees!)
+                : null)
+            .whereType<double>()
+            .toSet()
+            .toList();
+      });
     });
   }
 
@@ -162,11 +160,9 @@ class _DoctorPageState extends State<DoctorPage> {
 
         // Doctor List
         Expanded(
-          child: ValueListenableBuilder(
-            valueListenable: doctorNotifier,
-            builder: (BuildContext context, List<DoctorModel> doctorList,
-                Widget? child) {
-              final filteredDoctors = doctorList.where((doctor) {
+          child: Consumer<DoctorController>(
+            builder: (context, ctrl, _) {
+              final filteredDoctors = ctrl.doctors.where((doctor) {
                 bool matchesDepartment = selectedDepartment == null ||
                     doctor.department == selectedDepartment;
                 bool matchesQualification = selectedQualification == null ||
@@ -177,7 +173,6 @@ class _DoctorPageState extends State<DoctorPage> {
                 bool matchesFees = selectedFees == null ||
                     (doctor.fees != null &&
                         double.tryParse(doctor.fees!) == selectedFees);
-
                 return matchesDepartment &&
                     matchesQualification &&
                     matchesAge &&
@@ -187,183 +182,7 @@ class _DoctorPageState extends State<DoctorPage> {
                 itemCount: filteredDoctors.length,
                 itemBuilder: (context, index) {
                   final data = filteredDoctors[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 3,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              // Doctor Image
-                              Container(
-                                width: 70,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFE1ECFF),
-                                      Color(0xFFC7DBFF)
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 3,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black38,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: data.imagePath != null
-                                      ? kIsWeb
-                                          ? Image.network(data.imagePath!)
-                                          : Image.file(
-                                              File(data.imagePath!),
-                                              fit: BoxFit.cover,
-                                            )
-                                      : Image.asset(
-                                          'assets/images/men.jpg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 16),
-
-                              // Doctor Information
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          data.titleName ?? 'no',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        Text(
-                                          data.name ?? 'Unknown Doctor',
-                                          style: TextStyle(
-                                            color: Color(0xFF1A5CFF),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 6),
-                                    _detailRow(
-                                      Icons.school_outlined,
-                                      data.qualification ?? 'No qualification',
-                                    ),
-                                    const SizedBox(height: 4),
-                                    _detailRow(
-                                      Icons.medical_services_outlined,
-                                      data.department ?? 'No department',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Bottom
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF8FAFC),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => EditDoctor(
-                                            doctor: data,
-                                          )));
-                                },
-                                icon: const Icon(
-                                  Icons.edit_outlined,
-                                  color: Colors.blue,
-                                  size: 20,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                              ),
-
-                              Spacer(),
-                              // Schedule
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => TimingDoctor(
-                                      doctor: data,
-                                    ),
-                                  ));
-                                },
-                                icon: const Icon(
-                                  Icons.calendar_today_outlined,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                                label: const Text(
-                                  'Schedule',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF1A5CFF),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  shadowColor: Colors.blue.shade300,
-                                  elevation: 5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                  return _buildDoctorCard(context, data);
                 },
               );
             },
@@ -373,22 +192,154 @@ class _DoctorPageState extends State<DoctorPage> {
     );
   }
 
+  Widget _buildDoctorCard(BuildContext context, DoctorModel data) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 3,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Doctor Image
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFFE1ECFF), Color(0xFFC7DBFF)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: (data.imagePath != null && data.imagePath!.isNotEmpty)
+                        ? kIsWeb
+                            ? Image.network(data.imagePath!)
+                            : Image.file(File(data.imagePath!), fit: BoxFit.cover)
+                        : Image.asset('assets/images/men.jpg', fit: BoxFit.cover),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Doctor Information
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            data.titleName ?? '',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 18),
+                          ),
+                          Text(
+                            data.name ?? 'Unknown Doctor',
+                            style: const TextStyle(
+                              color: Color(0xFF1A5CFF),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      _detailRow(Icons.school_outlined,
+                          data.qualification ?? 'No qualification'),
+                      const SizedBox(height: 4),
+                      _detailRow(Icons.medical_services_outlined,
+                          data.department ?? 'No department'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Bottom action bar
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditDoctor(doctor: data)));
+                  },
+                  icon: const Icon(Icons.edit_outlined,
+                      color: Colors.blue, size: 20),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TimingDoctor(doctor: data)));
+                  },
+                  icon: const Icon(Icons.calendar_today_outlined,
+                      color: Colors.white, size: 16),
+                  label: const Text('Schedule',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1A5CFF),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    shadowColor: Colors.blue.shade300,
+                    elevation: 5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _detailRow(IconData icon, String value) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Color(0xFF1A5CFF),
-        ),
-        SizedBox(width: 6),
+        Icon(icon, size: 16, color: const Color(0xFF1A5CFF)),
+        const SizedBox(width: 6),
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              color: Color(0xFF475569),
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Color(0xFF475569), fontSize: 14),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

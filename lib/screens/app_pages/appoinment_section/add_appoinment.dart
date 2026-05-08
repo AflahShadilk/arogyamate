@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:arogyamate/data_base/functions/db_appoinment.dart';
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
@@ -16,6 +17,7 @@ import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AppointmentSection extends StatefulWidget {
@@ -40,13 +42,10 @@ class _AppointmentSectionState extends State<AppointmentSection> {
   final TextEditingController patientName = TextEditingController();
   final BloodGroupController bloodGroup = BloodGroupController();
    final genderController = GlobalKey<FormFieldState<String>>();
-   @override
+  @override
   void initState() {
-    
     super.initState();
-    getAllDoctors();
-
-    
+    // Doctors are already loaded via DoctorController in main.dart
   }
   void updateFile(File? file) {
     setState(() {
@@ -267,7 +266,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
         
         title: gender,
       );
-      await addAppoinment(appointments);
+      await context.read<AppointmentController>().add(appointments);
 
       patientName.clear();
       patientAge.clear();
@@ -287,91 +286,3 @@ class _AppointmentSectionState extends State<AppointmentSection> {
   }
 }
 
-//Blood Group---------------------------------------------------------------blood group
-// ignore: use_key_in_widget_constructors
-
-class BloodGroupController extends ChangeNotifier {
-  String? _selectedBloodGroup;
-
-  String? get selectedBloodGroup => _selectedBloodGroup;
-
-  void setBloodGroup(String? bloodGroup) {
-    _selectedBloodGroup = bloodGroup;
-    notifyListeners(); // Notifies listeners when value changes
-  }
-
-  void clear() {
-    _selectedBloodGroup = null;
-    notifyListeners();
-  }
-}
-
-class BloodGroupDropdown extends StatefulWidget {
-  final BloodGroupController controller;
-  final Function(String?)? onSaved;
-  final String? Function(String?)? validator;
-
-  const BloodGroupDropdown({
-    super.key,
-    required this.controller,
-    this.onSaved,
-    this.validator,
-  });
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _BloodGroupDropdownState createState() => _BloodGroupDropdownState();
-}
-
-class _BloodGroupDropdownState extends State<BloodGroupDropdown> {
-  final List<String> bloodGroups = [
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'O+',
-    'O-',
-    'AB+',
-    'AB-',
-    'None'
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField<String>(
-      validator: widget.validator,
-      onSaved: widget.onSaved,
-      builder: (FormFieldState<String> state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DropdownButton<String>(
-              value: widget.controller.selectedBloodGroup,
-              hint: const Text("Select "),
-              items: bloodGroups.map((String bloodGroup) {
-                return DropdownMenuItem<String>(
-                  value: bloodGroup,
-                  child: Text(bloodGroup),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  widget.controller.setBloodGroup(newValue);
-                  state.didChange(newValue);
-                });
-              },
-            ),
-            if (state.hasError)
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  state.errorText!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}

@@ -1,7 +1,8 @@
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DoctorSearchFilter extends StatefulWidget {
   final bool isPhone;
@@ -34,25 +35,26 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
   @override
   void initState() {
     super.initState();
-    fetchFilterData().then((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctrl = context.read<DoctorController>();
       if (mounted) {
         setState(() {
-          departments = doctorNotifier.value
+          departments = ctrl.doctors
               .map((d) => d.department ?? '')
               .where((d) => d.isNotEmpty)
               .toSet()
               .toList();
-          qualifications = doctorNotifier.value
+          qualifications = ctrl.doctors
               .map((d) => d.qualification ?? '')
               .where((q) => q.isNotEmpty)
               .toSet()
               .toList();
-          ages = doctorNotifier.value
+          ages = ctrl.doctors
               .map((d) => int.tryParse(d.years ?? '') ?? 0)
               .where((a) => a > 0)
               .toSet()
               .toList();
-          fees = doctorNotifier.value
+          fees = ctrl.doctors
               .map((d) => double.tryParse(d.fees ?? '') ?? 0.0)
               .where((f) => f > 0.0)
               .toSet()
