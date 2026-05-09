@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:arogyamate/data_base/functions/db_appoinment.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
@@ -194,9 +195,9 @@ class _DoctorViewState extends State<DoctorView> {
             const SizedBox(height: 16),
             SizedBox(
               height: s.height * 0.35,
-              child: ValueListenableBuilder<List<AppointModel>>(
-                valueListenable: AppointmentNotifier,
-                builder: (context, appointsUnder, child) {
+              child: Consumer<AppointmentController>(
+                builder: (context, ctrl, child) {
+                  final appointsUnder = ctrl.appointments.where((a) => a.doctorName == widget.doctor?.name).toList();
                   if (appointsUnder.isEmpty) {
                     return const Center(
                         child: Text('No appointments available'));

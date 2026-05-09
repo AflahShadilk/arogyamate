@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, must_be_immutable, duplicate_ignore
 import 'dart:io';
-import 'package:arogyamate/Data_Base/functions/db_doctorfuctions.dart';
-
+import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 
 import 'package:arogyamate/screens/app_pages/appoinment_section/add_appoinment.dart';
@@ -470,7 +470,7 @@ class _AddPageState extends State<AddPage> {
             imagePath: image!.path,
             newFilePath: uploadfile!.path,
             titleName: title);
-        addDoctors(doctors);
+        await context.read<DoctorController>().add(doctors);
 
         docName.clear();
         docAge.clear();
@@ -483,6 +483,7 @@ class _AddPageState extends State<AddPage> {
           profileImage = null;
         });
         setState(() {});
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MainPage()));
       }

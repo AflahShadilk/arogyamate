@@ -1,11 +1,7 @@
-//bottomsheet-------------------------------------------------------------------------------------------bottomSheet
-
 import 'package:arogyamate/controllers/department_controller.dart';
 import 'package:arogyamate/controllers/doctor_controller.dart';
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
-import 'package:arogyamate/data_base/functions/db_functions.dart';
+
 import 'package:arogyamate/data_base/models/department_model.dart';
-import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
@@ -46,8 +42,8 @@ void showBottomSheet1(
                         hint: 'Search',
                         icon: Icons.search_outlined,
                         colorr: Colors.greenAccent,
-                        searchFunction: searchDepartment,
-                        searchFunction2: searchDepartment,
+                        searchFunction: (val) => context.read<DepartmentController>().search(val),
+                        searchFunction2: (val) => context.read<DepartmentController>().search(val),
                       ),
                     ],
                   ),
@@ -161,8 +157,8 @@ void showBottomSheetDoctor(
                         hint: 'Search',
                         icon: Icons.search_outlined,
                         colorr: Colors.greenAccent,
-                        searchFunction: searchDoctor,
-                        searchFunction2: searchDoctor,
+                        searchFunction: (val) => context.read<DoctorController>().search(val),
+                        searchFunction2: (val) => context.read<DoctorController>().search(val),
                       ),
                     ],
                   ),

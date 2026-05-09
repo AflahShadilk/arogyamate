@@ -8,6 +8,11 @@ class AppointmentController extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
+  String? selectedDepartment;
+  String? selectedDoctor;
+  String? selectedBlood;
+  String? selectedAddress;
+
   List<AppointModel> get appointments => _appointments;
   bool get isLoading => _isLoading;
   String? get error => _error;
@@ -61,6 +66,23 @@ class AppointmentController extends ChangeNotifier {
 
   void clearFilter() {
     _appointments = List.from(_all);
+    selectedDepartment = null;
+    selectedDoctor = null;
+    selectedBlood = null;
+    selectedAddress = null;
+    notifyListeners();
+  }
+
+  void setFilterSelections({
+    String? department,
+    String? doctor,
+    String? blood,
+    String? address,
+  }) {
+    if (department != null) selectedDepartment = department;
+    if (doctor != null) selectedDoctor = doctor;
+    if (blood != null) selectedBlood = blood;
+    if (address != null) selectedAddress = address;
     notifyListeners();
   }
 

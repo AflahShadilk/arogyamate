@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:arogyamate/controllers/doctor_controller.dart';
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctors_timing.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
@@ -125,7 +124,7 @@ class _DoctorPageState extends State<DoctorPage> {
           isPhone: true,
           hint: "Search",
           controller: searchController,
-          onSearch: (value) => searchDoctor(value),
+          onSearch: (value) => context.read<DoctorController>().search(value),
           onFilterPressed: () {
             setState(() {
               showSearchContainer = !showSearchContainer;
@@ -152,7 +151,7 @@ class _DoctorPageState extends State<DoctorPage> {
                 selectedAge = age;
                 selectedFees = fees;
               });
-              searchDoctor(searchController.text);
+              context.read<DoctorController>().search(searchController.text);
             },
           ),
 

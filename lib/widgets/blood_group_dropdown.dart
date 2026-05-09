@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-/// Controller for the blood group dropdown.
-/// Extracted from add_appoinment.dart — now a standalone reusable widget.
 class BloodGroupController extends ChangeNotifier {
   String? _selectedBloodGroup;
 

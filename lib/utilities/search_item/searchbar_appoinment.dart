@@ -1,4 +1,5 @@
-import 'package:arogyamate/data_base/functions/db_appoinment.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
@@ -122,54 +123,21 @@ class AppoinmentSearchFilter extends StatefulWidget {
 }
 
 class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
-  String? selectedDepartment;
-  String? selectedDoctor;
-  String? selectedBlood;
-  String? selectedAddress;
-
-  List<String> departments = [];
-  List<String> doctor = [];
-  List<String> blood = [];
-  List<String> address = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchFilterAppoinment().then((_) {
-      if (mounted) {
-        setState(() {
-          departments = AppointmentNotifier.value
-              .map((d) => d.department ?? '')
-              .where((d) => d.isNotEmpty)
-              .toSet()
-              .toList();
-          doctor = AppointmentNotifier.value
-              .map((d) => d.doctorName ?? '')
-              .where((q) => q.isNotEmpty)
-              .toSet()
-              .toList();
-          blood = AppointmentNotifier.value
-              .map((b) => b.blood ?? "")
-              .where((b) => b.isNotEmpty)
-              .toSet()
-              .toList();
-          address = AppointmentNotifier.value
-              .map((a) => a.address ?? "")
-              .where((a) => a.isNotEmpty)
-              .toSet()
-              .toList();
-        });
-      }
-    });
-  }
-
   void applyFilters() {
+    final ctrl = context.read<AppointmentController>();
     widget.onFiltersSelected(
-        selectedDepartment, selectedDoctor, selectedBlood, selectedAddress);
+        ctrl.selectedDepartment, ctrl.selectedDoctor, ctrl.selectedBlood, ctrl.selectedAddress);
   }
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.watch<AppointmentController>();
+    final filterData = ctrl.filterData;
+    final departments = filterData['departments'] ?? [];
+    final doctors = filterData['doctors'] ?? [];
+    final blood = filterData['blood'] ?? [];
+    final address = filterData['address'] ?? [];
+    
     return Container(
       margin: EdgeInsets.symmetric(horizontal: widget.isPhone ? 0 : 20),
       padding: EdgeInsets.all(16),
@@ -206,11 +174,11 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                   child: _buildDropdown(
                     'Department',
                     departments,
-                    selectedDepartment,
-                    (val) => setState(() {
-                      selectedDepartment = val;
+                    ctrl.selectedDepartment,
+                    (val) {
+                      context.read<AppointmentController>().setFilterSelections(department: val);
                       applyFilters();
-                    }),
+                    },
                   ),
                 ),
                 Spacer(),
@@ -218,12 +186,12 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                   width: 120,
                   child: _buildDropdown(
                     'Doctor',
-                    doctor,
-                    selectedDoctor,
-                    (val) => setState(() {
-                      selectedDoctor = val;
+                    doctors,
+                    ctrl.selectedDoctor,
+                    (val) {
+                      context.read<AppointmentController>().setFilterSelections(doctor: val);
                       applyFilters();
-                    }),
+                    },
                   ),
                 ),
               ],
@@ -238,11 +206,11 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                   child: _buildDropdown(
                       'Blood Group',
                       blood,
-                      selectedBlood,
-                      (val) => setState(() {
-                            selectedBlood = val;
+                      ctrl.selectedBlood,
+                      (val) {
+                            context.read<AppointmentController>().setFilterSelections(blood: val);
                             applyFilters();
-                          })),
+                          }),
                 ),
                 Spacer(),
                 SizedBox(
@@ -250,11 +218,11 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                     child: _buildDropdown(
                         "Address",
                         address,
-                        selectedAddress,
-                        (val) => setState(() {
-                              selectedAddress = val;
+                        ctrl.selectedAddress,
+                        (val) {
+                              context.read<AppointmentController>().setFilterSelections(address: val);
                                   applyFilters();
-                            }))),
+                            })),
               ],
             ),
           ),

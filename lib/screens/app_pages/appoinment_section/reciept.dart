@@ -1,4 +1,5 @@
-import 'package:arogyamate/data_base/functions/db_appoinment.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/screens/app_pages/appoinment_section/edit_appoinment.dart';
 import 'package:arogyamate/utilities/search_item/searchbar_appoinment.dart';
@@ -22,26 +23,26 @@ class _RecieptPageState extends State<RecieptPage> {
   @override
   void initState() {
     super.initState();
-    getAllAppoinments();
-    fetchFilterAppoinment().then((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctrl = context.read<AppointmentController>();
       if (mounted) {
         setState(() {
-          departments = AppointmentNotifier.value
+          departments = ctrl.appointments
               .map((d) => d.department ?? '')
               .where((d) => d.isNotEmpty)
               .toSet()
               .toList();
-          doctor = AppointmentNotifier.value
+          doctor = ctrl.appointments
               .map((d) => d.doctorName ?? '')
               .where((q) => q.isNotEmpty)
               .toSet()
               .toList();
-          blood = AppointmentNotifier.value
+          blood = ctrl.appointments
               .map((b) => b.blood ?? "")
               .where((b) => b.isNotEmpty)
               .toSet()
               .toList();
-          address = AppointmentNotifier.value
+          address = ctrl.appointments
               .map((a) => a.address ?? "")
               .where((a) => a.isNotEmpty)
               .toSet()
@@ -106,7 +107,7 @@ class _RecieptPageState extends State<RecieptPage> {
                           selectedAddress = null;
                         });
                       },
-                      onSearch: (value) => searchAppoinment(value),
+                      onSearch: (value) => context.read<AppointmentController>().search(value),
                     ),
                     if (showSearchContainer)
                       AppoinmentSearchFilter(
@@ -119,14 +120,14 @@ class _RecieptPageState extends State<RecieptPage> {
                               selectedBlood = bloodGroup;
                               selectedAddress = address;
                             });
-                            searchAppoinment(searchMe.text);
+                            context.read<AppointmentController>().search(searchMe.text);
                           }),
                     const SizedBox(height: 30),
                     Expanded(
-                      child: ValueListenableBuilder(
-                        valueListenable: AppointmentNotifier,
+                      child: Consumer<AppointmentController>(
                         builder:
-                            (context, List<AppointModel> appoinmentList, _) {
+                            (context, ctrl, _) {
+                          final appoinmentList = ctrl.appointments;
                           final filterAppoinment =
                               appoinmentList.where((patient) {
                             bool setDepartment = selectedDepartment == null ||
@@ -351,10 +352,7 @@ class _RecieptPageState extends State<RecieptPage> {
           ),
           TextButton(
             onPressed: () {
-              deleteAppoinment(appointment.id!);
-              setState(() {
-                AppointmentNotifier.value.removeAt(index);
-              });
+              context.read<AppointmentController>().delete(appointment.id!);
               Navigator.pop(context);
             },
             child: Text(

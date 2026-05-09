@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
@@ -197,15 +198,13 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                     return; 
                                   }
                                 }
-                                await settingDoctorStatus(
-                                    widget.doctor!.id!, widget.doctor!, status,
-                                    date: dateController.text,
-                                    endDate: enddateController.text);
+                                await context.read<DoctorController>().setStatus(
+                                    widget.doctor!,
+                                    status: status,
+                                    leaveDate: dateController.text,
+                                    endLeaveDate: enddateController.text);
                                     // ignore: use_build_context_synchronously
                                 Navigator.pop(context);
-                                setState(() {
-                                  isLeave = true;
-                                });
                                 
                               },
                               style: ElevatedButton.styleFrom(
@@ -245,15 +244,13 @@ class _TimingDoctorState extends State<TimingDoctor> {
                               child: ElevatedButton(
                                 onPressed: () {
                                 
-                                  settingDoctorStatus(
-                                    widget.doctor!.id!,
+                                  context.read<DoctorController>().setStatus(
                                     widget.doctor!,
-                                    status,
-                                    stattTime: startTime,
+                                    status: status,
+                                    startTime: startTime,
                                     endTime: endTime,
                                   );
                                   Navigator.pop(context);
-                                  setState(() {});
                                   
                                 },
                                 child: Row(
@@ -276,15 +273,13 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                 child: Center(
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      settingDoctorStatus(
-                                        widget.doctor!.id!,
+                                      context.read<DoctorController>().setStatus(
                                         widget.doctor!,
-                                        status,
-                                        stattTime: startTime,
+                                        status: status,
+                                        startTime: startTime,
                                         endTime: endTime,
                                       );
                                        Navigator.pop(context);
-                                      setState(() {});
                                      
                                     },
                                     child: Row(
@@ -307,15 +302,12 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                     child: Center(
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          settingDoctorStatus(
-                                              widget.doctor!.id!,
+                                          context.read<DoctorController>().setStatus(
                                               widget.doctor!,
-                                              status,
-                                              stattTime: startTime,
+                                              status: status,
+                                              startTime: startTime,
                                               endTime: endTime);
                                           Navigator.pop(context);
-
-                                          setState(() {});
                                         },
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,

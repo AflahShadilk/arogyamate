@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/core/session/session_manager.dart';
-import 'package:arogyamate/data_base/functions/db_doctorfuctions.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctor_details.dart';
 import 'package:arogyamate/utilities/app_essencials/toggles.dart';
@@ -131,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                             selectedQualification = null;
                           });
                         },
-                        onSearch: (val) => searchDoctor(val),
+                        onSearch: (val) => context.read<DoctorController>().search(val),
                       ),
                     ),
                     if (showSearchContainer)
@@ -145,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                             selectedDepartment = department;
                             selectedQualification = qualification;
                           });
-                          searchDoctor(search.text);
+                          context.read<DoctorController>().search(search.text);
                         },
                       ),
                     Expanded(

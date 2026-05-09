@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:arogyamate/Data_Base/functions/db_doctorfuctions.dart';
+import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
@@ -77,7 +78,7 @@ class _EditDoctorState extends State<EditDoctor>
         showDeleteButton: widget.doctor != null,
         deleteFunction: widget.doctor != null
             ? () async {
-                await deleteDoctor(widget.doctor!.id!);
+                await context.read<DoctorController>().delete(widget.doctor!.id!);
               }
             : null,
       ),
@@ -353,7 +354,7 @@ class _EditDoctorState extends State<EditDoctor>
           years: exprnce,
           fees: feeses,
           imagePath: images);
-      await updateDoctor(updateDetails);
+      await context.read<DoctorController>().update(updateDetails);
 
       // Clear fields with animation
       setState(() {

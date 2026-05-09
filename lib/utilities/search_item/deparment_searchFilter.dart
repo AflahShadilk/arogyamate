@@ -22,55 +22,15 @@ class DoctorSearchFilter extends StatefulWidget {
 }
 
 class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
-  String? selectedDepartment;
-  String? selectedQualification;
-  int? selectedAge;
-  double? selectedFees;
-
-  List<String> departments = [];
-  List<String> qualifications = [];
-  List<int> ages = [];
-  List<double> fees = [];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctrl = context.read<DoctorController>();
-      if (mounted) {
-        setState(() {
-          departments = ctrl.doctors
-              .map((d) => d.department ?? '')
-              .where((d) => d.isNotEmpty)
-              .toSet()
-              .toList();
-          qualifications = ctrl.doctors
-              .map((d) => d.qualification ?? '')
-              .where((q) => q.isNotEmpty)
-              .toSet()
-              .toList();
-          ages = ctrl.doctors
-              .map((d) => int.tryParse(d.years ?? '') ?? 0)
-              .where((a) => a > 0)
-              .toSet()
-              .toList();
-          fees = ctrl.doctors
-              .map((d) => double.tryParse(d.fees ?? '') ?? 0.0)
-              .where((f) => f > 0.0)
-              .toSet()
-              .toList();
-        });
-      }
-    });
-  }
-
   void applyFilters() {
+    final ctrl = context.read<DoctorController>();
     widget.onFiltersSelected(
-        selectedDepartment, selectedQualification, selectedAge, selectedFees);
+        ctrl.selectedDepartment, ctrl.selectedQualification, ctrl.selectedAge, ctrl.selectedFees);
   }
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.watch<DoctorController>();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: widget.isPhone ? 0 : 20),
       padding: EdgeInsets.all(16),
@@ -105,12 +65,12 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                   width: 120,
                   child: _buildDropdown(
                     'Department',
-                    departments,
-                    selectedDepartment,
-                    (val) => setState(() {
-                      selectedDepartment = val;
+                    ctrl.departments,
+                    ctrl.selectedDepartment,
+                    (val) {
+                      context.read<DoctorController>().setFilterSelections(department: val);
                       applyFilters();
-                    }),
+                    },
                   ),
                 ),
                 Spacer(),
@@ -118,12 +78,12 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                   width: 120,
                   child: _buildDropdown(
                     'Qualification',
-                    qualifications,
-                    selectedQualification,
-                    (val) => setState(() {
-                      selectedQualification = val;
+                    ctrl.qualifications,
+                    ctrl.selectedQualification,
+                    (val) {
+                      context.read<DoctorController>().setFilterSelections(qualification: val);
                       applyFilters();
-                    }),
+                    },
                   ),
                 ),
               ],
@@ -139,12 +99,13 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                       width: 120,
                       child: _buildDropdown(
                         'Age',
-                        ages.map((e) => e.toString()).toList(),
-                        selectedAge?.toString(),
-                        (val) => setState(() {
-                          selectedAge = val != null ? int.tryParse(val) : null;
+                        ctrl.ages.map((e) => e.toString()).toList(),
+                        ctrl.selectedAge?.toString(),
+                        (val) {
+                          context.read<DoctorController>().setFilterSelections(
+                              age: val != null ? int.tryParse(val) : null);
                           applyFilters();
-                        }),
+                        },
                       ),
                     ),
                   if (widget.showAgefilter && widget.showFeesfilter) Spacer(),
@@ -153,13 +114,13 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                       width: 120,
                       child: _buildDropdown(
                         'Fees',
-                        fees.map((e) => e.toString()).toList(),
-                        selectedFees?.toString(),
-                        (val) => setState(() {
-                          selectedFees =
-                              val != null ? double.tryParse(val) : null;
+                        ctrl.fees.map((e) => e.toString()).toList(),
+                        ctrl.selectedFees?.toString(),
+                        (val) {
+                          context.read<DoctorController>().setFilterSelections(
+                              fees: val != null ? double.tryParse(val) : null);
                           applyFilters();
-                        }),
+                        },
                       ),
                     ),
                 ],

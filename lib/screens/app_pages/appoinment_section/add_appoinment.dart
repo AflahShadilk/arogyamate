@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:arogyamate/controllers/appointment_controller.dart';
-import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';

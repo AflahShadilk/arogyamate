@@ -9,6 +9,11 @@ class DoctorController extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
+  String? selectedDepartment;
+  String? selectedQualification;
+  int? selectedAge;
+  double? selectedFees;
+
   List<DoctorModel> get doctors => _doctors;
   Map<String, List> get filterData => _filterData;
   bool get isLoading => _isLoading;
@@ -63,6 +68,8 @@ class DoctorController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void search(String query) => searchByName(query);
+
   void searchByDepartment(String query) {
     if (query.isEmpty) {
       _doctors = List.from(_all);
@@ -94,6 +101,23 @@ class DoctorController extends ChangeNotifier {
 
   void clearFilter() {
     _doctors = List.from(_all);
+    selectedDepartment = null;
+    selectedQualification = null;
+    selectedAge = null;
+    selectedFees = null;
+    notifyListeners();
+  }
+
+  void setFilterSelections({
+    String? department,
+    String? qualification,
+    int? age,
+    double? fees,
+  }) {
+    if (department != null) selectedDepartment = department;
+    if (qualification != null) selectedQualification = qualification;
+    if (age != null) selectedAge = age;
+    if (fees != null) selectedFees = fees;
     notifyListeners();
   }
 
