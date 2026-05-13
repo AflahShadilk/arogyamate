@@ -17,8 +17,11 @@ class SessionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setProfileImage(String? path) {
-    _profileImage = path;
+  Future<void> updateHospitalDetails({String? name, String? id, String? image}) async {
+    await SessionManager.updateProfile(name: name, id: id, image: image);
+    if (name != null) _hospitalName = name;
+    if (id != null) _hospitalId = id;
+    if (image != null) _profileImage = image;
     notifyListeners();
   }
 }

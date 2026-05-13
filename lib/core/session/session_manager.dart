@@ -33,6 +33,17 @@ class SessionManager {
     await prefs.setBool(_keyUserLoggedIn, true);
   }
 
+  static Future<void> updateProfile({
+    String? image,
+    String? name,
+    String? id,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (image != null) await prefs.setString(_keyProfileImage, image);
+    if (name != null) await prefs.setString(_keyHospitalName, name);
+    if (id != null) await prefs.setString(_keyHospitalId, id);
+  }
+
   static Future<void> setWelcomeSeen() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyHasSeen, true);

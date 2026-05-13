@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:arogyamate/controllers/session_controller.dart';
@@ -10,6 +12,7 @@ import 'package:arogyamate/core/theme/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
@@ -110,6 +113,11 @@ class _AccountPageState extends State<AccountPage> {
                           const SizedBox(height: 30),
                           const Divider(),
                           const SizedBox(height: 20),
+                          Consumer<SessionController>(
+                            builder: (context, session, _) => _buildMenuLink(Icons.edit_rounded, "Edit Profile", () {
+                              _showEditProfileSheet(context, session);
+                            }),
+                          ),
                           _buildMenuLink(Icons.help_outline_rounded, "Help & Support", () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HelpPage()));
                           }),
@@ -137,28 +145,162 @@ class _AccountPageState extends State<AccountPage> {
 
 
   Widget _buildProfileAvatar(bool isPhone, String? image) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 4),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            blurRadius: 15,
-            spreadRadius: 2,
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Theme.of(context).colorScheme.primary, width: 4),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                blurRadius: 15,
+                spreadRadius: 2,
+              ),
+            ],
           ),
-        ],
+          child: CircleAvatar(
+            radius: 60,
+            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+            backgroundImage: (image != null && image!.isNotEmpty)
+                ? (kIsWeb ? NetworkImage(image!) as ImageProvider : FileImage(File(image!)))
+                : const AssetImage('assets/images/hospital.jpg') as ImageProvider,
+            child: (image == null || image!.isEmpty)
+                ? Icon(Icons.local_hospital_rounded, size: 45, color: Theme.of(context).colorScheme.primary)
+                : const SizedBox(),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Consumer<SessionController>(
+            builder: (context, session, _) => GestureDetector(
+              onTap: () => _pickImage(session),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 18),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickImage(SessionController session) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      await session.updateHospitalDetails(image: image.path);
+    }
+  }
+
+  void _showEditProfileSheet(BuildContext context, SessionController session) {
+    final nameController = TextEditingController(text: session.hospitalName);
+    final idController = TextEditingController(text: session.hospitalId);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          top: 20,
+          left: 20,
+          right: 20,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Edit Hospital Profile",
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 25),
+            _buildEditField("Hospital Name", nameController, Icons.business_rounded),
+            const SizedBox(height: 20),
+            _buildEditField("Hospital ID", idController, Icons.badge_rounded),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await session.updateHospitalDetails(
+                    name: nameController.text,
+                    id: idController.text,
+                  );
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Profile updated successfully!")),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                ),
+                child: Text(
+                  "Save Changes",
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      child: CircleAvatar(
-        radius: 60,
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-        backgroundImage: (image != null && image!.isNotEmpty)
-            ? (kIsWeb ? NetworkImage(image!) as ImageProvider : FileImage(File(image!)))
-            : const AssetImage('assets/images/hospital.jpg') as ImageProvider,
-        child: (image == null || image!.isEmpty)
-            ? Icon(Icons.local_hospital_rounded, size: 45, color: Theme.of(context).colorScheme.primary)
-            : const SizedBox(),
-      ),
+    );
+  }
+
+  Widget _buildEditField(String label, TextEditingController controller, IconData icon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, size: 20),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+            filled: true,
+            fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+          ),
+          style: GoogleFonts.poppins(fontSize: 15),
+        ),
+      ],
     );
   }
 
