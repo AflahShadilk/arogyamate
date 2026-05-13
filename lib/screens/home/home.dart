@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
+import 'package:arogyamate/screens/app_pages/analytics/analytics_screen.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctor_details.dart';
 import 'package:arogyamate/utilities/app_essencials/toggles.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
@@ -226,15 +227,22 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            Icons.notifications_none_rounded,
-            color: Theme.of(context).colorScheme.primary,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.bar_chart_rounded,
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ],

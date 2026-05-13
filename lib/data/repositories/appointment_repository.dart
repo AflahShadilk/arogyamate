@@ -64,4 +64,8 @@ class AppointmentRepository {
       'address': all.map((a) => a.address ?? '').toSet().where((s) => s.isNotEmpty).toList(),
     };
   }
+
+  static List<AppointModel> getHistoryByPhone(String phone) {
+    return _db.values.where((a) => a.phone == phone).toList();
+  }
 }

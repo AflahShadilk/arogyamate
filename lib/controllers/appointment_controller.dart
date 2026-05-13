@@ -101,4 +101,8 @@ class AppointmentController extends ChangeNotifier {
 
   Map<String, List<String>> get filterData =>
       AppointmentRepository.getFilterData();
+
+  List<AppointModel> getPatientHistory(String phone) {
+    return AppointmentRepository.getHistoryByPhone(phone);
+  }
 }

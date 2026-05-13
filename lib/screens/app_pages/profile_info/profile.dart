@@ -9,6 +9,7 @@ import 'package:arogyamate/screens/app_pages/profile_info/help.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/terms_conditions.dart';
 import 'package:arogyamate/screens/login_info/start_screen.dart';
 import 'package:arogyamate/core/theme/theme_provider.dart';
+import 'package:arogyamate/utilities/data/backup_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -118,6 +119,20 @@ class _AccountPageState extends State<AccountPage> {
                               _showEditProfileSheet(context, session);
                             }),
                           ),
+                          _buildMenuLink(Icons.backup_rounded, "Backup Hospital Data", () async {
+                            await BackupHelper.exportData();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Backup completed successfully!")),
+                            );
+                          }),
+                          _buildMenuLink(Icons.settings_backup_restore_rounded, "Restore Data", () async {
+                            final success = await BackupHelper.importData();
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Data restored successfully! Please restart app.")),
+                              );
+                            }
+                          }),
                           _buildMenuLink(Icons.help_outline_rounded, "Help & Support", () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HelpPage()));
                           }),

@@ -1,9 +1,12 @@
 import 'package:arogyamate/controllers/appointment_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/screens/app_pages/appoinment_section/edit_appoinment.dart';
+import 'package:arogyamate/screens/app_pages/patient/patient_history_screen.dart';
+import 'package:arogyamate/utilities/reporting/pdf_helper.dart';
 import 'package:arogyamate/utilities/search_item/searchbar_appoinment.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecieptPage extends StatefulWidget {
   final AppointModel? appoint;
@@ -181,6 +184,39 @@ class _RecieptPageState extends State<RecieptPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        Consumer<SessionController>(
+                                          builder: (context, session, _) => IconButton(
+                                            icon: Icon(
+                                              Icons.picture_as_pdf_rounded,
+                                              size: 20,
+                                              color: Theme.of(context).colorScheme.primary,
+                                            ),
+                                            onPressed: () {
+                                              PdfHelper.generateIndividualReceipt(
+                                                hospitalName: session.hospitalName ?? "Arogyamate",
+                                                hospitalId: session.hospitalId ?? "N/A",
+                                                appointment: data,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.history_rounded,
+                                            size: 20,
+                                            color: Theme.of(context).colorScheme.primary,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => PatientHistoryScreen(
+                                                  phone: data.phone ?? '',
+                                                  patientName: data.name ?? 'Patient',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                         IconButton(
                                           icon: Icon(
                                             Icons.edit,
