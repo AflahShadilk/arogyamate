@@ -51,11 +51,7 @@ class _AccountPageState extends State<AccountPage> {
           height: s.height,
           width: s.width,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue.shade50, Colors.white],
-            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
           child: SingleChildScrollView(
             child: Padding(
@@ -77,8 +73,8 @@ class _AccountPageState extends State<AccountPage> {
                   Container(
                     width: isPhone?s.width:s.width,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black87),
+                      color: Theme.of(context).cardColor,
+                      border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -146,13 +142,13 @@ class _AccountPageState extends State<AccountPage> {
       children: [
         CircleAvatar(
           radius: 55,
-          backgroundColor: Colors.grey[300],
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           backgroundImage: (image != null && image!.isNotEmpty)
               ?(kIsWeb?NetworkImage(image!) as ImageProvider: FileImage(File(image!)))
               : AssetImage('assets/images/hospital.jpg'),
           child: (image == null ||image!.isEmpty )
               ? Icon(Icons.photo_camera_outlined,
-                  size: 40, color: Colors.black54)
+                  size: 40, color: Theme.of(context).colorScheme.onSurfaceVariant)
               : SizedBox(),
         ),
       ],
@@ -164,12 +160,12 @@ class _AccountPageState extends State<AccountPage> {
       width: isPhone ? s.width * 0.9 : s.width * 0.5,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -220,7 +216,7 @@ class _AccountPageState extends State<AccountPage> {
               style: GoogleFonts.poppins(
                 fontSize: isPhone ? 14 : 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
               ),
             ),
           ),
@@ -230,7 +226,7 @@ class _AccountPageState extends State<AccountPage> {
               style: GoogleFonts.poppins(
                 fontSize: isPhone ? 15 : 17,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
+                color: Theme.of(context).colorScheme.primary,
                 letterSpacing: 0.3,
               ),
             ),
@@ -249,7 +245,7 @@ class _AccountPageState extends State<AccountPage> {
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: Colors.red.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.error.withOpacity(0.3),
             blurRadius: 15,
             spreadRadius: 2,
             offset: const Offset(0, 5),
@@ -261,7 +257,7 @@ class _AccountPageState extends State<AccountPage> {
           await logout();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red[600],
+          backgroundColor: Theme.of(context).colorScheme.error,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -270,7 +266,7 @@ class _AccountPageState extends State<AccountPage> {
         child: Text(
           'Sign Out',
           style: GoogleFonts.poppins(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onError,
             fontSize: isPhone ? 16 : 18,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,

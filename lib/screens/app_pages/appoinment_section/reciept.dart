@@ -60,13 +60,7 @@ class _RecieptPageState extends State<RecieptPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.blue.shade50, Colors.white],
-          ),
-        ),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: LayoutBuilder(
           builder: (context, constraints) {
             bool isPhone = constraints.maxWidth < 600;
@@ -81,10 +75,8 @@ class _RecieptPageState extends State<RecieptPage> {
                   children: [
                     Text(
                       'Appointments',
-                      style: TextStyle(
-                        fontSize: 28,
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue.shade900,
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -151,14 +143,14 @@ class _RecieptPageState extends State<RecieptPage> {
                                   Icon(
                                     Icons.event_busy,
                                     size: 60,
-                                    color: Colors.grey.shade400,
+                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
                                     'No appointments found',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: Colors.grey.shade600,
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -176,14 +168,14 @@ class _RecieptPageState extends State<RecieptPage> {
                                 margin: const EdgeInsets.only(bottom: 12),
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(15),
                                   boxShadow: [
                                     BoxShadow(
                                       // ignore: deprecated_member_use
                                       color:
                                           // ignore: deprecated_member_use
-                                          Colors.blue.shade100.withOpacity(0.3),
+                                          Theme.of(context).shadowColor.withOpacity(0.1),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -202,7 +194,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.blue.shade900,
+                                              color: Theme.of(context).colorScheme.primary,
                                             ),
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -213,7 +205,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                             vertical: 4,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
+                                            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
@@ -221,7 +213,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                             '${data.date ?? 'N/A'} ${data.time ?? ''}',
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.blue.shade700,
+                                              color: Theme.of(context).colorScheme.primary,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -236,7 +228,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                           icon: Icon(
                                             Icons.edit,
                                             size: 20,
-                                            color: Colors.blue.shade600,
+                                            color: Theme.of(context).colorScheme.primary,
                                           ),
                                           onPressed: () {
                                             Navigator.of(context).push(
@@ -251,7 +243,7 @@ class _RecieptPageState extends State<RecieptPage> {
                                           icon: Icon(
                                             Icons.delete,
                                             size: 20,
-                                            color: Colors.red.shade400,
+                                            color: Theme.of(context).colorScheme.error,
                                           ),
                                           onPressed: () {
                                             _deleteAppointment(
@@ -269,11 +261,11 @@ class _RecieptPageState extends State<RecieptPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              _buildInfoRow(Icons.person,
+                                              _buildInfoRow(context, Icons.person,
                                                   'Age: ${data.age ?? 'N/A'}'),
-                                              _buildInfoRow(Icons.bloodtype,
+                                              _buildInfoRow(context, Icons.bloodtype,
                                                   'Blood: ${data.blood ?? 'N/A'}'),
-                                              _buildInfoRow(
+                                              _buildInfoRow(context,
                                                   Icons.medical_services,
                                                   'Dr: ${data.doctorName ?? 'N/A'}'),
                                             ],
@@ -285,12 +277,12 @@ class _RecieptPageState extends State<RecieptPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              _buildInfoRow(
+                                              _buildInfoRow(context,
                                                   Icons.local_hospital,
                                                   'Dept: ${data.department ?? 'N/A'}'),
-                                              _buildInfoRow(Icons.location_on,
+                                              _buildInfoRow(context, Icons.location_on,
                                                   'Addr: ${data.address ?? 'N/A'}'),
-                                              _buildInfoRow(Icons.phone,
+                                              _buildInfoRow(context, Icons.phone,
                                                   'Ph: ${data.phone ?? 'N/A'}'),
                                             ],
                                           ),
@@ -315,19 +307,19 @@ class _RecieptPageState extends State<RecieptPage> {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Icon(icon, size: 14, color: Colors.blue.shade300),
+          Icon(icon, size: 14, color: Theme.of(context).colorScheme.primary.withOpacity(0.6)),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade800,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -357,7 +349,7 @@ class _RecieptPageState extends State<RecieptPage> {
             },
             child: Text(
               'Delete',
-              style: TextStyle(color: Colors.red.shade400),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
         ],

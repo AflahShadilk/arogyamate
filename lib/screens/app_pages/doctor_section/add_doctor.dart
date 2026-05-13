@@ -11,7 +11,7 @@ import 'package:arogyamate/utilities/app_essencials/toggles.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/bottom_sheet/reusable_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
-import 'package:arogyamate/utilities/colors/addpages_color.dart';
+
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/image_filesPicker/file_uploader.dart';
@@ -56,7 +56,7 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: LayoutBuilder(builder: (context, Constraints) {
         bool isPhone = Constraints.maxWidth < 600;
 
@@ -73,11 +73,7 @@ class _AddPageState extends State<AddPage> {
               height: s.height,
               width: s.width,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [backgroundColor, Colors.white],
-                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -86,8 +82,12 @@ class _AddPageState extends State<AddPage> {
                   children: [
                     Column(
                       children: [
-                        Toggle('Appoinment', 'Add Doctor', _selectedShift,
-                            _handleToggle)
+                        AppToggle(
+                          firstOne: 'Appoinment',
+                          secondOne: 'Add Doctor',
+                          selectedIndex: _selectedShift,
+                          onToggle: _handleToggle,
+                        )
                       ],
                     ),
                     SizedBox(height: 24),
@@ -168,13 +168,13 @@ class _AddPageState extends State<AddPage> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                             width: 4,
                           ),
                           boxShadow: [
                             BoxShadow(
                               // ignore: deprecated_member_use
-                              color: Colors.black.withOpacity(0.12),
+                              color: Theme.of(context).shadowColor.withOpacity(0.12),
                               spreadRadius: 2,
                               blurRadius: 10,
                               offset: const Offset(0, 4),
@@ -183,7 +183,7 @@ class _AddPageState extends State<AddPage> {
                         ),
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: Colors.grey[200],
+                          backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                           backgroundImage: profileImage != null
                               ? kIsWeb
                                   ? NetworkImage(profileImage!.path)
@@ -192,22 +192,14 @@ class _AddPageState extends State<AddPage> {
                           child: profileImage == null
                               ? Container(
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        // ignore: deprecated_member_use
-                                        accentColor.withOpacity(0.7),
-                                        primaryColor,
-                                      ],
-                                    ),
+                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Center(
+                                  child: Center(
                                     child: Icon(
                                       Icons.photo_camera_outlined,
                                       size: 40,
-                                      color: Colors.white,
+                                      color: Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                 )
@@ -222,7 +214,7 @@ class _AddPageState extends State<AddPage> {
                       "Add Photo",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
-                        color: primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -320,10 +312,10 @@ class _AddPageState extends State<AddPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 12),
                         decoration: BoxDecoration(
-                          color: Colors.grey[50],
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: Colors.grey[300]!,
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                             width: 1,
                           ),
                         ),
@@ -335,7 +327,7 @@ class _AddPageState extends State<AddPage> {
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: successColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -347,7 +339,7 @@ class _AddPageState extends State<AddPage> {
                                     style: GoogleFonts.poppins(
                                       fontSize: 12,
                                       // ignore: deprecated_member_use
-                                      color: textColor.withOpacity(0.7),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -355,7 +347,7 @@ class _AddPageState extends State<AddPage> {
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.close,
-                                      color: Colors.red[400], size: 18),
+                                      color: Theme.of(context).colorScheme.error, size: 18),
                                   onPressed: () {
                                     setState(() {
                                       uploadingFile = null;
@@ -373,7 +365,7 @@ class _AddPageState extends State<AddPage> {
               SizedBox(height: 36),
               Column(
                 children: [
-                  submit(isPhone, onPressDoc),
+                  submit(context, isPhone, onPressDoc),
                   const SizedBox(height: 30),
                 ],
               )
@@ -391,42 +383,12 @@ class _AddPageState extends State<AddPage> {
         controller: docDepart,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
-              width: 1.5,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
-              width: 1.5,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: primaryColor,
-              width: 1.8,
-            ),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          fillColor: Colors.white,
-          filled: true,
           hintText: 'Eg: General',
-          hintStyle: TextStyle(
-            color: hintColor,
-            fontWeight: FontWeight.w400,
-          ),
           suffixIcon: Container(
             margin: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               // ignore: deprecated_member_use
-              color: accentColor.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: GestureDetector(
@@ -436,7 +398,7 @@ class _AddPageState extends State<AddPage> {
               },
               child: Icon(
                 Icons.add_circle_outlined,
-                color: accentColor,
+                color: Theme.of(context).colorScheme.primary,
                 size: 28,
               ),
             ),
@@ -496,7 +458,7 @@ class _AddPageState extends State<AddPage> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          backgroundColor: Colors.red[600],
+          backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -505,7 +467,7 @@ class _AddPageState extends State<AddPage> {
           elevation: 6,
           action: SnackBarAction(
             label: 'Add Photo',
-            textColor: Colors.white,
+            textColor: Theme.of(context).colorScheme.onError,
             onPressed: () {
               reusableShowBottomSheet(
                 context,

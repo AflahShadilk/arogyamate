@@ -27,9 +27,9 @@ class _PdfViewerState extends State<PdfViewer> {
             left: 16,
             child: FloatingActionButton(
               mini: true,
-              backgroundColor: Colors.white.withOpacity(0.7),
+              backgroundColor: Theme.of(context).cardColor.withOpacity(0.7),
               onPressed: () => Navigator.pop(context),
-              child: const Icon(Icons.arrow_back, color: Colors.black),
+              child: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
             ),
           ),
         ],

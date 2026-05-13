@@ -32,7 +32,7 @@ class _DoctorViewState extends State<DoctorView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: appBar(context, 'Doctor Profile'),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -90,10 +90,10 @@ class _DoctorViewState extends State<DoctorView> {
                   ),
                 );
               },
-              icon: const Icon(Icons.edit, color: Colors.white),
+              icon: Icon(Icons.edit, color: Theme.of(context).colorScheme.onPrimary),
               style: IconButton.styleFrom(
                 // ignore: deprecated_member_use
-                backgroundColor: Colors.teal.withOpacity(0.8),
+                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.8),
               ),
             ),
           ),
@@ -115,13 +115,13 @@ class _DoctorViewState extends State<DoctorView> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 widget.doctor?.name ?? 'Unknown',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                 textAlign: TextAlign.center,
@@ -151,13 +151,13 @@ class _DoctorViewState extends State<DoctorView> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.teal.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     shape: BoxShape.rectangle,
                   ),
                   child: const Center(
                     child: Icon(
                       Icons.file_copy_rounded,
-                      color: Colors.teal,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 28,
                     ),
                   ),
@@ -181,12 +181,12 @@ class _DoctorViewState extends State<DoctorView> {
           children: [
             Row(
               children: [
-                const Icon(Icons.calendar_today, color: Colors.teal),
+                Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Appointments',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.teal,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -217,7 +217,7 @@ class _DoctorViewState extends State<DoctorView> {
                                 .titleMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.teal,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                           ),
                           subtitle: Column(
@@ -245,7 +245,7 @@ class _DoctorViewState extends State<DoctorView> {
 
   Widget _buildInfoTile(IconData icon, String label, String? value) {
     return ListTile(
-      leading: Icon(icon, color: Colors.teal),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(
         label,
         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -260,7 +260,7 @@ class _DoctorViewState extends State<DoctorView> {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Colors.teal),
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 8),
           Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(width: 8),

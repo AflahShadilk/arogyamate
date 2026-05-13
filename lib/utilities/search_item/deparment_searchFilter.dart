@@ -35,11 +35,11 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
       margin: EdgeInsets.symmetric(horizontal: widget.isPhone ? 0 : 20),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black26,
+            color: Theme.of(context).shadowColor.withOpacity(0.1),
             blurRadius: 10,
             offset: Offset(0, 2),
           ),
@@ -53,7 +53,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A5CFF),
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           SizedBox(height: 12),

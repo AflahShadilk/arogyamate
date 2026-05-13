@@ -7,7 +7,7 @@ class HelpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SafeArea(
@@ -104,7 +104,7 @@ class HelpPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Colors.blueAccent,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -121,7 +121,7 @@ class HelpPage extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             height: 1.5,
-            color: Colors.black87,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
         ),
       ),
@@ -139,7 +139,7 @@ class HelpPage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.teal,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -180,7 +180,7 @@ class HelpPage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: Colors.blueGrey,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           ...details.map(

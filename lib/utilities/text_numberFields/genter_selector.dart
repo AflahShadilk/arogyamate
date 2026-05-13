@@ -1,4 +1,4 @@
-import 'package:arogyamate/utilities/colors/addpages_color.dart';
+
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -29,7 +29,7 @@ class _GenderSelectorState extends State<GenderSelector> {
         decoration: InputDecoration(
           hintText: 'Gender',
           hintStyle: TextStyle(
-            color: Colors.black45,
+            color: Theme.of(context).hintColor,
           ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -37,7 +37,7 @@ class _GenderSelectorState extends State<GenderSelector> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
           ),
@@ -45,14 +45,14 @@ class _GenderSelectorState extends State<GenderSelector> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              color: primaryColor,
+              color: Theme.of(context).colorScheme.primary,
               width: 1.8,
             ),
           ),
@@ -104,7 +104,7 @@ class _TitleSelectorState extends State<TitleSelector> {
           border: OutlineInputBorder(
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(10),
@@ -113,14 +113,14 @@ class _TitleSelectorState extends State<TitleSelector> {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
-              color: Colors.blue,
+              color: Theme.of(context).colorScheme.primary,
               width: 1.8,
             ),
           ),

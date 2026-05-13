@@ -32,8 +32,8 @@ class _SelectionPageState extends State<SelectionPage> {
         child: Container(
           height: size.height,
           width: size.width,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF8F9FA), // Clean background color
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
           child: Center(
             child: SingleChildScrollView(
@@ -48,7 +48,7 @@ class _SelectionPageState extends State<SelectionPage> {
                     Text(
                       'Welcome to',
                       style: GoogleFonts.poppins(
-                        color: Colors.black87,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: isMobile ? 18 : 24,
                         fontWeight: FontWeight.w500,
                       ),
@@ -58,13 +58,13 @@ class _SelectionPageState extends State<SelectionPage> {
                     Text(
                       'Arogya Mate',
                       style: GoogleFonts.oleoScript(
-                        color: const Color(0xFF37474F),
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: isMobile ? 36 : 46,
                         fontWeight: FontWeight.bold,
                         shadows: [
                           Shadow(
                             // ignore: deprecated_member_use
-                            color: Colors.black.withOpacity(0.2),
+                            color: Theme.of(context).shadowColor,
                             offset: const Offset(0, 3),
                             blurRadius: 5,
                           ),
@@ -104,11 +104,11 @@ class _SelectionPageState extends State<SelectionPage> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEEEEE),
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                           border: Border.all(
                             // ignore: deprecated_member_use
-                            color: const Color(0xFF37474F).withOpacity(0.2),
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                             width: 2,
                           ),
                           image: profileImage != null
@@ -119,10 +119,10 @@ class _SelectionPageState extends State<SelectionPage> {
                               : null,
                         ),
                         child: profileImage == null
-                            ? const Icon(
+                            ? Icon(
                                 Icons.camera_alt_rounded,
                                 size: 40,
-                                color: Color(0xFF37474F),
+                                color: Theme.of(context).colorScheme.primary,
                               )
                             : null,
                       ),
@@ -134,12 +134,12 @@ class _SelectionPageState extends State<SelectionPage> {
                       width: isMobile ? size.width * 0.9 : size.width * 0.55,
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
                             // ignore: deprecated_member_use
-                            color: Colors.black.withOpacity(0.06),
+                            color: Theme.of(context).shadowColor.withOpacity(0.1),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                             spreadRadius: 1,
@@ -170,19 +170,11 @@ class _SelectionPageState extends State<SelectionPage> {
                                     OnPress();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF37474F),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
                                     elevation: 4,
-                                    // ignore: deprecated_member_use
-                                    shadowColor: const Color(0xFF37474F).withOpacity(0.4),
                                   ),
                                   child: Text(
                                     "Get Started",
                                     style: GoogleFonts.poppins(
-                                      color: Colors.white,
                                       fontSize: isMobile ? 16 : 18,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.5,

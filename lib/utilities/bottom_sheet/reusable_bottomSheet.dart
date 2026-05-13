@@ -48,11 +48,11 @@ void reusableShowBottomSheet(
                     },
                     child: Column(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           child: Icon(Icons.camera_alt,
-                              color: Colors.white, size: 30),
+                              color: Theme.of(context).colorScheme.onPrimary, size: 30),
                         ),
                         const SizedBox(height: 10),
                         Text(photoLabel),
@@ -78,9 +78,9 @@ void reusableShowBottomSheet(
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: Colors.green,
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                                 child: Icon(fileIcon,
-                                    color: Colors.white, size: 30),
+                                    color: Theme.of(context).colorScheme.onSecondary, size: 30),
                               ),
                               const SizedBox(height: 10),
                               Text(fileLabel),
@@ -104,9 +104,9 @@ void reusableShowBottomSheet(
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: Colors.green,
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                                 child: Icon(fileIcon,
-                                    color: Colors.white, size: 30),
+                                    color: Theme.of(context).colorScheme.onSecondary, size: 30),
                               ),
                               const SizedBox(height: 10),
                               Text('Gallery'),

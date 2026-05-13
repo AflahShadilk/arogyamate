@@ -61,15 +61,9 @@ class _HomePageState extends State<HomePage> {
               }
             },
             child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.blue.shade50, Colors.white],
-                ),
-              ),
               height: s.height,
               width: s.width,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: isPhone ? 10 : 20, vertical: isPhone ? 10 : 30),
@@ -86,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                           height: isPhone ? s.height * 0.2 : s.height * 0.3,
                           width: isPhone ? s.width * 0.9 : s.width * 0.6,
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                             image: (image != null && image!.isNotEmpty)
                                 ? DecorationImage(
                                     image: kIsWeb
@@ -101,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Icon(
                                     Icons.local_hospital_rounded,
                                     size: 60,
-                                    color: Colors.grey[400],
+                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                                   ),
                                 )
                               : null,
@@ -174,7 +168,7 @@ class _HomePageState extends State<HomePage> {
       return const Center(
         child: Text(
           'No doctors available for this shift.',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
         ),
       );
     }
@@ -238,14 +232,14 @@ class _HomePageState extends State<HomePage> {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundColor: Colors.grey[300],
+                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 backgroundImage: (data.imagePath != null && data.imagePath!.isNotEmpty)
                     ? (kIsWeb
                         ? NetworkImage(data.imagePath!) as ImageProvider
                         : FileImage(File(data.imagePath!)))
                     : null,
                 child: (data.imagePath == null || data.imagePath!.isEmpty)
-                    ? Icon(Icons.person, size: 30, color: Colors.grey[600])
+                    ? Icon(Icons.person, size: 30, color: Theme.of(context).colorScheme.primary)
                     : null,
               ),
               const SizedBox(width: 15),
@@ -255,8 +249,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       data.name!,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -267,14 +260,14 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             '${data.startTime ?? 'N/A'} - ${data.endtime ?? ''}',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.blue.shade700,
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -286,9 +279,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 data.department!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.green,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ],

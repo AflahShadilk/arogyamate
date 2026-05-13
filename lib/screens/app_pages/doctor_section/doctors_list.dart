@@ -72,13 +72,7 @@ class _DoctorPageState extends State<DoctorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.blue.shade50, Colors.white],
-          ),
-        ),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -101,16 +95,14 @@ class _DoctorPageState extends State<DoctorPage> {
             children: [
               Icon(
                 Icons.medical_services_rounded,
-                color: Color(0xFF1A5CFF),
+                color: Theme.of(context).colorScheme.primary,
                 size: 28,
               ),
               SizedBox(width: 10),
               Text(
                 'Doctors',
-                style: TextStyle(
-                  fontSize: 28,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade900,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -195,11 +187,11 @@ class _DoctorPageState extends State<DoctorPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black26,
+            color: Theme.of(context).shadowColor,
             blurRadius: 3,
             offset: const Offset(0, 4),
           ),
@@ -216,16 +208,12 @@ class _DoctorPageState extends State<DoctorPage> {
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFE1ECFF), Color(0xFFC7DBFF)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white, width: 3),
+                    border: Border.all(color: Theme.of(context).colorScheme.surface, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black38,
+                        color: Theme.of(context).shadowColor.withOpacity(0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -250,24 +238,23 @@ class _DoctorPageState extends State<DoctorPage> {
                         children: [
                           Text(
                             data.titleName ?? '',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 18),
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w300),
                           ),
                           Text(
                             data.name ?? 'Unknown Doctor',
-                            style: const TextStyle(
-                              color: Color(0xFF1A5CFF),
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      _detailRow(Icons.school_outlined,
+                      _detailRow(context, Icons.school_outlined,
                           data.qualification ?? 'No qualification'),
                       const SizedBox(height: 4),
-                      _detailRow(Icons.medical_services_outlined,
+                      _detailRow(context, Icons.medical_services_outlined,
                           data.department ?? 'No department'),
                     ],
                   ),
@@ -280,7 +267,7 @@ class _DoctorPageState extends State<DoctorPage> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
@@ -294,8 +281,8 @@ class _DoctorPageState extends State<DoctorPage> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => EditDoctor(doctor: data)));
                   },
-                  icon: const Icon(Icons.edit_outlined,
-                      color: Colors.blue, size: 20),
+                  icon: Icon(Icons.edit_outlined,
+                      color: Theme.of(context).colorScheme.primary, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -305,20 +292,20 @@ class _DoctorPageState extends State<DoctorPage> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => TimingDoctor(doctor: data)));
                   },
-                  icon: const Icon(Icons.calendar_today_outlined,
-                      color: Colors.white, size: 16),
-                  label: const Text('Schedule',
+                  icon: Icon(Icons.calendar_today_outlined,
+                      color: Theme.of(context).colorScheme.onPrimary, size: 16),
+                  label: Text('Schedule',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 14)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A5CFF),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 15),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    shadowColor: Colors.blue.shade300,
+                    shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                     elevation: 5,
                   ),
                 ),
@@ -330,15 +317,15 @@ class _DoctorPageState extends State<DoctorPage> {
     );
   }
 
-  Widget _detailRow(IconData icon, String value) {
+  Widget _detailRow(BuildContext context, IconData icon, String value) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF1A5CFF)),
+        Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(color: Color(0xFF475569), fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

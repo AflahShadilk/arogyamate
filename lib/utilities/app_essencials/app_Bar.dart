@@ -8,24 +8,16 @@ AppBar appBar(
 }) {
   return AppBar(
     elevation: 0,
-    flexibleSpace: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-    ),
+    backgroundColor: Theme.of(context).colorScheme.primary,
     leading: IconButton(
-      icon: const Icon(Icons.arrow_back_ios, size: 24, color: Colors.white),
+      icon: Icon(Icons.arrow_back_ios, size: 24, color: Theme.of(context).colorScheme.onPrimary),
       onPressed: () => Navigator.pop(context),
     ),
     centerTitle: true,
     title: Text(
       title,
       style: const TextStyle(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.onPrimary,
         fontSize: 24,
         fontWeight: FontWeight.bold,
         letterSpacing: 0.5,
@@ -47,12 +39,12 @@ AppBar appBar(
                 ),
                 content: const Text(
                   "Are you sure you want to delete this item?",
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).hintColor),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+                    child: Text("Cancel", style: TextStyle(color: Theme.of(context).hintColor)),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -62,13 +54,13 @@ AppBar appBar(
                       // ignore: use_build_context_synchronously
                       Navigator.pop(context);
                     },
-                    child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                    child: Text("Delete", style: TextStyle(color: Theme.of(context).colorScheme.error)),
                   ),
                 ],
               ),
             );
           },
-          icon: Icon(Icons.delete_outline, color: Colors.red[300], size: 28),
+          icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.onError, size: 28),
         ),
     ],
   );

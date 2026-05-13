@@ -39,12 +39,12 @@ class _MainPageState extends State<MainPage> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white, // Ensures full coverage of color
+            color: Theme.of(context).cardColor, // Ensures full coverage of color
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
                 // ignore: deprecated_member_use
-                color: Colors.black.withOpacity(0.1),
+                color: Theme.of(context).shadowColor.withOpacity(0.1),
                 blurRadius: 6,
                 spreadRadius: 2,
                 offset: const Offset(0, 3),
@@ -55,19 +55,19 @@ class _MainPageState extends State<MainPage> {
             borderRadius: BorderRadius.circular(30),
             child: GNav(
               // ignore: deprecated_member_use
-              rippleColor: Colors.purple.withOpacity(0.2),
+              rippleColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
               // ignore: deprecated_member_use
-              hoverColor: Colors.purple.withOpacity(0.1),
+              hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               haptic: true,
               tabBorderRadius: 30,
               curve: Curves.easeInOut,
               duration: const Duration(milliseconds: 400),
               gap: 6, // Ensures a balanced gap
-              color: Colors.grey[700],
-              activeColor: Colors.white,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              activeColor: Theme.of(context).colorScheme.onPrimary,
               iconSize: 24,
-              backgroundColor: Colors.white,
-              tabBackgroundColor: Colors.purple,
+              backgroundColor: Theme.of(context).cardColor,
+              tabBackgroundColor: Theme.of(context).colorScheme.primary,
               padding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 10), // Balanced padding
               tabMargin: EdgeInsets.zero, // Removes unnecessary gaps

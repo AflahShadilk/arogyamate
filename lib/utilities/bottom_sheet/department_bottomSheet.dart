@@ -35,13 +35,13 @@ void showBottomSheet1(
                       BottumSheetColumn(
                         hint: 'Add new',
                         icon: Icons.add,
-                        colorr: Colors.blueAccent,
+                        colorr: Theme.of(context).colorScheme.primary,
                       ),
                       SizedBox(height: 10),
                       BottumSheetColumn2(
                         hint: 'Search',
                         icon: Icons.search_outlined,
-                        colorr: Colors.greenAccent,
+                        colorr: Theme.of(context).colorScheme.secondary,
                         searchFunction: (val) => context.read<DepartmentController>().search(val),
                         searchFunction2: (val) => context.read<DepartmentController>().search(val),
                       ),
@@ -55,7 +55,7 @@ void showBottomSheet1(
                   width: isPhone ? s.width * 0.95 : s.width * 0.95,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(31, 113, 112, 112)
+                  color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3)
                   ),
                   child: Consumer<DepartmentController>(
                     builder: (context, deptCtrl, _) {
@@ -64,7 +64,7 @@ void showBottomSheet1(
                               child: Text(
                                 'No Department Found!',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Theme.of(context).textTheme.bodyMedium?.color,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -106,7 +106,7 @@ void showBottomSheet1(
                                         }
                                       },
                                       icon: const Icon(Icons.delete_outline,
-                                          color: Colors.redAccent),
+                                          color: Theme.of(context).colorScheme.error),
                                     ),
                                   ),
                                 );
@@ -156,7 +156,7 @@ void showBottomSheetDoctor(
                       BottumSheetColumn2(
                         hint: 'Search',
                         icon: Icons.search_outlined,
-                        colorr: Colors.greenAccent,
+                        colorr: Theme.of(context).colorScheme.secondary,
                         searchFunction: (val) => context.read<DoctorController>().search(val),
                         searchFunction2: (val) => context.read<DoctorController>().search(val),
                       ),
@@ -170,7 +170,7 @@ void showBottomSheetDoctor(
                   width: isPhone ? s.width * 0.95 : s.width * 0.95,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(31, 113, 112, 112)
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3)
                   ),
                   child: Consumer<DoctorController>(
                     builder: (context, doctorCtrl, _) {
@@ -179,7 +179,7 @@ void showBottomSheetDoctor(
                               child: Text(
                                 'No Doctor Found!',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Theme.of(context).textTheme.bodyMedium?.color,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -266,11 +266,11 @@ class _BottumSheetColumnState extends State<BottumSheetColumn> {
                         borderRadius: BorderRadius.circular(10)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    fillColor: Colors.blueGrey[100],
+                    fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
                     filled: true,
                     contentPadding: EdgeInsets.all(10),
                     hintText: widget.hint,
-                    hintStyle: TextStyle(color: Colors.black45),
+                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -373,11 +373,11 @@ class _BottumSheetColumn2State extends State<BottumSheetColumn2> {
                         borderRadius: BorderRadius.circular(10)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    fillColor: Colors.blueGrey[100],
+                    fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
                     filled: true,
                     contentPadding: EdgeInsets.all(10),
                     hintText: widget.hint,
-                    hintStyle: TextStyle(color: Colors.black45),
+                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

@@ -39,14 +39,10 @@ class _TimingDoctorState extends State<TimingDoctor> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              gradient: LinearGradient(
-                colors: [Colors.blue.shade50, Colors.blue.shade100],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.shade200,
+                  color: Theme.of(context).shadowColor.withOpacity(0.1),
                   blurRadius: 6,
                   offset: Offset(0, 3),
                 ),
@@ -59,19 +55,19 @@ class _TimingDoctorState extends State<TimingDoctor> {
                   contentPadding: EdgeInsets.all(16),
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundColor: Colors.green,
+                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     backgroundImage: widget.doctor?.imagePath != null
                         ?kIsWeb?NetworkImage(widget.doctor!.imagePath!): FileImage(File(widget.doctor!.imagePath!))
                         : null,
                     child: widget.doctor?.imagePath == null
-                        ? Icon(Icons.person, color: Colors.white, size: 30)
+                        ? Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 30)
                         : null,
                   ),
                   title: Text(
                     widget.doctor?.name ?? "Unknown Doctor",
                     style: GoogleFonts.poppins(
                       fontSize: 20,
-                      color: Color(0xFF1A5CFF),
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -79,7 +75,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                     children: [
                       Icon(
                         Icons.school_outlined,
-                        color: Color(0xFF1A5CFF),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       SizedBox(
                         width: 6,
@@ -88,7 +84,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                         widget.doctor?.department ?? "No Department",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
-                          color: Color(0xFF475569),
+                          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -100,7 +96,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                     value: status.isEmpty ? null : status,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Theme.of(context).colorScheme.surfaceVariant ?? Theme.of(context).colorScheme.primary.withOpacity(0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -208,7 +204,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                 
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
+                                backgroundColor: Theme.of(context).colorScheme.primary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -218,7 +214,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                               child: Text(
                                 'Confirm Leave',
                                 style: GoogleFonts.poppins(
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -229,7 +225,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                               Text(
                                 'Leave from ${dateController.text} to ${enddateController.text}',
                                 style: TextStyle(
-                                    color: Colors.red,
+                                    color: Theme.of(context).colorScheme.error,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500),
                               ),

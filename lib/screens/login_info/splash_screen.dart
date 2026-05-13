@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 boxShadow: [
                   BoxShadow(
                     // ignore: deprecated_member_use
-                    color: Colors.black.withOpacity(0.1),
+                    color: Theme.of(context).shadowColor.withOpacity(0.1),
                     blurRadius: 15,
                     spreadRadius: 1,
                     offset: Offset(0, 4),
@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Text(
                   "Version 1.0.0",
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).textTheme.bodySmall?.color,
                     fontSize: 14,
                   ),
                 ),

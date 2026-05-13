@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:arogyamate/utilities/bottom_sheet/reusable_bottomSheet.dart';
-import 'package:arogyamate/utilities/colors/addpages_color.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,16 +40,16 @@ class _FileUploaderState extends State<FileUploader> {
       decoration: BoxDecoration(
         border: Border.all(
           // ignore: deprecated_member_use
-          color: primaryColor.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
           width: 1.5,
           style: BorderStyle.solid,
         ),
-        color: Colors.grey[50],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -87,7 +87,7 @@ class _FileUploaderState extends State<FileUploader> {
               icon: Icon(
                 Icons.upload_file_outlined,
                 size: 36,
-                color: primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
             )
           : uploadingFile!.path.endsWith('.pdf')
@@ -98,7 +98,7 @@ class _FileUploaderState extends State<FileUploader> {
                       const Icon(
                         Icons.picture_as_pdf,
                         size: 42,
-                        color: Color.fromARGB(255, 180, 32, 32),
+                        color: Theme.of(context).colorScheme.error,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -106,7 +106,7 @@ class _FileUploaderState extends State<FileUploader> {
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: textColor,
+                          color: Theme.of(context).textTheme.bodySmall?.color,
                         ),
                       ),
                     ],

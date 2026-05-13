@@ -76,7 +76,7 @@ class _BloodGroupDropdownState extends State<BloodGroupDropdown> {
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
                   state.errorText!,
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
           ],

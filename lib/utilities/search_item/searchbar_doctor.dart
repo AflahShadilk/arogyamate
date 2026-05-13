@@ -29,12 +29,12 @@ class _CommonSearchState extends State<CommonSearch> {
       padding: EdgeInsets.symmetric(horizontal: widget.isPhone ? 0 : 20),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               // ignore: deprecated_member_use
-              color: Colors.grey.withOpacity(0.2),
+              color: Theme.of(context).shadowColor.withOpacity(0.1),
               blurRadius: 5,
               spreadRadius: 2,
               offset: Offset(0, 3),
@@ -45,9 +45,9 @@ class _CommonSearchState extends State<CommonSearch> {
           controller: widget.controller,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).cardColor,
             hintText: widget.hint,
-            hintStyle: TextStyle(color: Colors.grey[400]),
+            hintStyle: TextStyle(color: Theme.of(context).hintColor),
             contentPadding: const EdgeInsets.symmetric(
               vertical: 15,
               horizontal: 20,
@@ -58,14 +58,14 @@ class _CommonSearchState extends State<CommonSearch> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!, width: 0),
+              borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF1A5CFF), width: 2),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
             ),
             prefixIcon: IconButton(
-              icon: Icon(Icons.search, color: Colors.grey[600]),
+              icon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
               onPressed: () {
                 if (widget.onSearch != null) {
                   widget.onSearch!(widget.controller.text);
@@ -76,11 +76,11 @@ class _CommonSearchState extends State<CommonSearch> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.filter_list, color: Colors.blue),
+                  icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
                   onPressed: widget.onFilterPressed,
                 ),
                 IconButton(
-                  icon: Icon(Icons.clear, color: Colors.grey[500]),
+                  icon: Icon(Icons.clear, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onPressed: () {
                     widget.controller.clear();
                     widget.onClearPressed();

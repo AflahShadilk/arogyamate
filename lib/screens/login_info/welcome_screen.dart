@@ -26,12 +26,8 @@ class _WelcomePageState extends State<WelcomePage> {
           return Container(
             height: size.height,
             width: size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.white, Color(0xFFEEF6FC)],
-              ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
             ),
             child: SafeArea(
               child: SingleChildScrollView(
@@ -47,14 +43,14 @@ class _WelcomePageState extends State<WelcomePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.medical_services, color: Color(0xFF4cb3ec), size: isMobile ? 24 : 28),
+                            Icon(Icons.medical_services, color: Theme.of(context).colorScheme.primary, size: isMobile ? 24 : 28),
                             const SizedBox(width: 8),
                             Text(
                               'ArogyaMate',
                               style: GoogleFonts.poppins(
                                 fontSize: isMobile ? 20 : 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF4cb3ec),
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                           ],
@@ -80,7 +76,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             child: Text(
                               'Daily Journal for Hospital Management',
                               style: GoogleFonts.poppins(
-                                color: Colors.black87,
+                                color: Theme.of(context).textTheme.displayLarge?.color,
                                 fontSize: isMobile ? 24 : 32,
                                 fontWeight: FontWeight.bold,
                                 height: 1.2,
@@ -94,7 +90,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             child: Text(
                               'Manage doctors, patient records, and more using your mobile or web app.',
                               style: GoogleFonts.poppins(
-                                color: Colors.black54,
+                                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                                 fontSize: isMobile ? 16 : 18,
                                 height: 1.5,
                               ),
@@ -119,15 +115,9 @@ class _WelcomePageState extends State<WelcomePage> {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF4cb3ec),
-                                foregroundColor: Colors.white,
                                 padding: EdgeInsets.symmetric(
                                   horizontal: isMobile ? 32 : 48,
                                   vertical: isMobile ? 16 : 20,
-                                ),
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               child: Text(

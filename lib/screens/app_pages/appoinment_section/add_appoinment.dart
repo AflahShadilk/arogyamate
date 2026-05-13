@@ -8,7 +8,7 @@ import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
-import 'package:arogyamate/utilities/colors/addpages_color.dart';
+
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
@@ -112,10 +112,8 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Blood :',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(width: 13),
@@ -164,7 +162,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 SizedBox(height: 36),
                 Column(
                   children: [
-                    submit(isPhone, onPressAppoinment),
+                    submit(context, isPhone, onPressAppoinment),
                     SizedBox(height: 30),
                   ],
                 )
@@ -183,39 +181,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
-              width: 1.5,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: primaryColor,
-              width: 1.8,
-            ),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          fillColor: Colors.white,
-          filled: true,
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.black45),
           suffixIcon: Container(
             margin: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              // ignore: deprecated_member_use
-              color: accentColor.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: onBottomSheetTap != null
@@ -225,7 +195,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                     },
                     child: Icon(
                       Icons.add_circle_outlined,
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 30,
                     ),
                   )

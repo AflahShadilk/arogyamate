@@ -75,7 +75,7 @@ class _EditAppointment extends State<EditAppoinment>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: appBar(context, "Patient Info",
           showDeleteButton:  widget.appoint != null, ),
       body: LayoutBuilder(builder: (context, constraints) {
@@ -90,16 +90,11 @@ class _EditAppointment extends State<EditAppoinment>
                   padding: const EdgeInsets.all(24),
                   width: isPhone ? s.width * 0.9 : 500,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      colors: [Colors.white, Colors.grey[50]!],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.shade200,
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
                         spreadRadius: 5,
                         blurRadius: 15,
                         offset: const Offset(0, 5),
@@ -128,10 +123,8 @@ class _EditAppointment extends State<EditAppoinment>
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Blood :',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(width: 13),
@@ -171,17 +164,17 @@ class _EditAppointment extends State<EditAppoinment>
                           onPressed: pressMe,
                           style: ElevatedButton.styleFrom(
                             elevation: 8,
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            shadowColor: Colors.blue.shade400,
+                            shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Save Changes',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.5,
@@ -214,10 +207,8 @@ class _EditAppointment extends State<EditAppoinment>
     children: [
       Text(
         heading,
-        style: TextStyle(
-          fontSize: 16,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w600,
-          color: Colors.grey[800],
           letterSpacing: 0.3,
         ),
       ),
@@ -227,37 +218,10 @@ class _EditAppointment extends State<EditAppoinment>
         autovalidateMode: AutovalidateMode.onUserInteraction,
         keyboardType: kb,
         decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.grey[50],
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.blue, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.red, width: 1.5),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.red, width: 2),
-          ),
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey[400]),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
           suffixIcon: key.text.isNotEmpty
               ? IconButton(
-                  icon: Icon(Icons.clear, color: Colors.grey[400]),
+                  icon: const Icon(Icons.clear),
                   onPressed: () {
                     key.clear();
                     setState(() {});
@@ -272,7 +236,7 @@ class _EditAppointment extends State<EditAppoinment>
                     }
                     setState(() {});
                   },
-                  child: Icon(Icons.add_circle_outlined, size: 30, color: Colors.blue),
+                  child: Icon(Icons.add_circle_outlined, size: 30, color: Theme.of(context).colorScheme.primary),
                 ),
         ),
         validator: validatorr,

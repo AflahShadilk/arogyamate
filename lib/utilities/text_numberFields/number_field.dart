@@ -1,4 +1,4 @@
-import 'package:arogyamate/utilities/colors/addpages_color.dart';
+
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class _NumberFieldState extends State<NumberField> {
           border: OutlineInputBorder(
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
             borderRadius: BorderRadius.circular(10),
@@ -38,23 +38,23 @@ class _NumberFieldState extends State<NumberField> {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: primaryColor,
+              color: Theme.of(context).colorScheme.primary,
               width: 1.8,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 13),
-           fillColor: Colors.white,
+           fillColor: Theme.of(context).cardColor,
           filled: true,
           hintText: widget.hint,
           hintStyle: TextStyle(
-            color: Colors.black45,
+            color: Theme.of(context).hintColor,
           )),
       validator: widget.validate,
     );
@@ -106,7 +106,7 @@ SizedBox  ageField(
         border: OutlineInputBorder(
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
             borderRadius: BorderRadius.circular(10),
@@ -116,23 +116,23 @@ SizedBox  ageField(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               // ignore: deprecated_member_use
-              color: primaryColor.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: primaryColor,
+              color: Theme.of(context).colorScheme.primary,
               width: 1.8,
             ),
           ),
         contentPadding: EdgeInsets.symmetric(horizontal: 13, vertical: 4),
-        fillColor: Colors.white,
+        fillColor: Theme.of(context).cardColor,
         filled: true,
         hintText: 'Enter Age',
         hintStyle: TextStyle(
-          color: Colors.black45,
+          color: Theme.of(context).hintColor,
         ),
       ),
       validator: (value) {
@@ -168,7 +168,7 @@ SizedBox phoneNumberField(bool isPhone, TextEditingController controller, BuildC
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: primaryColor.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -177,23 +177,23 @@ SizedBox phoneNumberField(bool isPhone, TextEditingController controller, BuildC
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             // ignore: deprecated_member_use
-            color: primaryColor.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
             width: 1.5,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: primaryColor,
+            color: Theme.of(context).colorScheme.primary,
             width: 1.8,
           ),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 13, vertical: 4),
-        fillColor: Colors.white,
+        fillColor: Theme.of(context).cardColor,
         filled: true,
         hintText: 'Mobile number',
         hintStyle: TextStyle(
-          color: Colors.black45,
+          color: Theme.of(context).hintColor,
         ),
       ),
       validator: (value) {
