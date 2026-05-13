@@ -7,7 +7,6 @@ import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/pdfviewer.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
-import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +25,9 @@ class _DoctorViewState extends State<DoctorView> {
   @override
   void initState() {
     super.initState();
-    pdfPath = widget.doctor!.newFilePath!;
+    if (kDebugMode) print("DEBUG: DoctorView initState for ${widget.doctor?.name ?? 'Unknown'}");
+    // Safely assign pdfPath if doctor exists
+    pdfPath = widget.doctor?.newFilePath;
   }
 
   @override
@@ -63,18 +64,26 @@ class _DoctorViewState extends State<DoctorView> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Stack(
         children: [
-          Container(
-            height: isPhone ? s.height * 0.25 : s.height * 0.3,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              image: DecorationImage(
-                image: kIsWeb
-                    ? NetworkImage(widget.doctor?.imagePath ?? '')
-                    : FileImage(File(widget.doctor?.imagePath ?? '')),
-                fit: BoxFit.cover,
-                onError: (exception, stackTrace) =>
-                    const AssetImage('assets/placeholder.png'),
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              height: isPhone ? MediaQuery.of(context).size.height * 0.25 : MediaQuery.of(context).size.height * 0.3,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: (widget.doctor?.imagePath?.isNotEmpty ?? false)
+                    ? DecorationImage(
+                        image: kIsWeb
+                            ? NetworkImage(widget.doctor!.imagePath!) as ImageProvider
+                            : FileImage(File(widget.doctor!.imagePath!)),
+                        fit: BoxFit.cover,
+                        onError: (exception, stackTrace) =>
+                            const AssetImage('assets/placeholder.png'),
+                      )
+                    : const DecorationImage(
+                        image: AssetImage('assets/placeholder.png'),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),
@@ -138,8 +147,8 @@ class _DoctorViewState extends State<DoctorView> {
             _buildInfoTile(
                 Icons.health_and_safety, 'Status', widget.doctor?.status),
             SizedBox(
-              width: isPhone(context) ? s.width * 0.22: s.width * 0.25,
-              height: isPhone(context) ? s.height * 0.07 : s.height * 0.1,
+              width: isPhone(context) ? MediaQuery.of(context).size.width * 0.22: MediaQuery.of(context).size.width * 0.25,
+              height: isPhone(context) ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.1,
               child: GestureDetector(
                 onTap: () {
                   if (pdfPath != null) {
@@ -194,7 +203,7 @@ class _DoctorViewState extends State<DoctorView> {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: s.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.35,
               child: Consumer<AppointmentController>(
                 builder: (context, ctrl, child) {
                   final appointsUnder = ctrl.appointments.where((a) => a.doctorName == widget.doctor?.name).toList();

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
-import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +53,10 @@ class _TimingDoctorState extends State<TimingDoctor> {
                   leading: CircleAvatar(
                     radius: 30,
                     backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    backgroundImage: widget.doctor?.imagePath != null
-                        ?kIsWeb?NetworkImage(widget.doctor!.imagePath!): FileImage(File(widget.doctor!.imagePath!))
+                    backgroundImage: (widget.doctor?.imagePath != null && widget.doctor!.imagePath!.isNotEmpty)
+                        ? (kIsWeb 
+                            ? NetworkImage(widget.doctor!.imagePath!) as ImageProvider
+                            : FileImage(File(widget.doctor!.imagePath!)))
                         : null,
                     child: widget.doctor?.imagePath == null
                         ? Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 30)
@@ -151,7 +152,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                             Row(
                               children: [
                                 SizedBox(
-                                  width: isPhone ? s.width * 0.36 : s.width * 0.36,
+                                  width: isPhone ? MediaQuery.of(context).size.width * 0.36 : MediaQuery.of(context).size.width * 0.36,
                                   child: Column(
                                     children: [
                                       HeadLine(head: 'Start Date'),
@@ -161,7 +162,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                 ),
                                 const SizedBox(width: 30),
                                 SizedBox(
-                                  width: isPhone ? s.width * 0.36 : s.width * 0.36,
+                                  width: isPhone ? MediaQuery.of(context).size.width * 0.36 : MediaQuery.of(context).size.width * 0.36,
                                   child: Column(
                                     children: [
                                       HeadLine(head: 'End Date'),

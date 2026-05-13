@@ -175,7 +175,7 @@ class _DoctorPageState extends State<DoctorPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: (data.imagePath != null && data.imagePath!.isNotEmpty)
+                    child: (data.imagePath?.isNotEmpty ?? false)
                         ? kIsWeb
                             ? Image.network(data.imagePath!)
                             : Image.file(File(data.imagePath!), fit: BoxFit.cover)

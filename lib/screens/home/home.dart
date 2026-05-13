@@ -413,7 +413,7 @@ class _HomePageState extends State<HomePage> {
               child: CircleAvatar(
                 radius: 35,
                 backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                backgroundImage: (data.imagePath != null && data.imagePath!.isNotEmpty)
+                backgroundImage: (data.imagePath?.isNotEmpty ?? false)
                     ? (kIsWeb
                         ? NetworkImage(data.imagePath!) as ImageProvider
                         : FileImage(File(data.imagePath!)))
@@ -429,7 +429,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    data.name!,
+                    data.name ?? 'Unknown Doctor',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
@@ -445,7 +445,7 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          data.department!,
+                          data.department ?? 'General',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(

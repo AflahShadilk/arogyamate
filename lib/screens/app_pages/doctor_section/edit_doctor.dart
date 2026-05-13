@@ -7,7 +7,6 @@ import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
-import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,16 +49,16 @@ class _EditDoctorState extends State<EditDoctor>
     _animationController.forward();
 
     if (widget.doctor != null) {
-      name.text = widget.doctor!.name!;
-      age.text = widget.doctor!.age!;
-      phone.text = widget.doctor!.phone!;
-      qualification.text = widget.doctor!.qualification!;
-      department.text = widget.doctor!.department!;
-      experience.text = widget.doctor!.years!;
-      fees.text = widget.doctor!.fees!;
+      name.text = widget.doctor?.name ?? '';
+      age.text = widget.doctor?.age ?? '';
+      phone.text = widget.doctor?.phone ?? '';
+      qualification.text = widget.doctor?.qualification ?? '';
+      department.text = widget.doctor?.department ?? '';
+      experience.text = widget.doctor?.years ?? '';
+      fees.text = widget.doctor?.fees ?? '';
       
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<DoctorFormController>().setUpdateImagePath(widget.doctor!.imagePath);
+        context.read<DoctorFormController>().setUpdateImagePath(widget.doctor?.imagePath);
       });
     }
   }
@@ -95,7 +94,7 @@ class _EditDoctorState extends State<EditDoctor>
                 child: Container(
                   margin: const EdgeInsets.all(20),
                   padding: const EdgeInsets.all(24),
-                  width: isPhone ? s.width * 0.9 : 500,
+                  width: isPhone ? MediaQuery.of(context).size.width * 0.9 : 500,
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(20),
@@ -136,7 +135,7 @@ class _EditDoctorState extends State<EditDoctor>
                                   backgroundImage: formCtrl.updateImagePath != null
                                       ? kIsWeb
                                           ? NetworkImage(formCtrl.updateImagePath!)
-                                          : FileImage(File(formCtrl.updateImagePath!))
+                                          : FileImage(File(formCtrl.updateImagePath!)) as ImageProvider
                                       : null,
                                   radius: 50,
                                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -282,9 +281,9 @@ class _EditDoctorState extends State<EditDoctor>
                           },
                         )
                       : GestureDetector(
-                          onTap: () {
-                            showBottomSheet1(context, s.width < 600, department);
-                          },
+                            onTap: () {
+                              showBottomSheet1(context, MediaQuery.of(context).size.width < 600, department);
+                            },
                           child: Icon(Icons.add_circle_outlined,
                               size: 30, color: Theme.of(context).colorScheme.primary),
                         ))

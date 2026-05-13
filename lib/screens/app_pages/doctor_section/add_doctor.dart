@@ -15,7 +15,6 @@ import 'package:arogyamate/utilities/bottom_sheet/reusable_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
 
 import 'package:arogyamate/utilities/constant/global_key.dart';
-import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/image_filesPicker/file_uploader.dart';
 import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
@@ -69,8 +68,8 @@ class _AddPageState extends State<AddPage> {
               }
             },
             child: Container(
-              height: s.height,
-              width: s.width,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
@@ -147,7 +146,7 @@ class _AddPageState extends State<AddPage> {
                         onTap: () {
                           reusableShowBottomSheet(
                             context,
-                            s.width < 600,
+                            MediaQuery.of(context).size.width < 600,
                             fileIcon: Icons.upload_outlined,
                             isfile: false,
                             photoLabel: "Take Photo",
@@ -250,7 +249,7 @@ class _AddPageState extends State<AddPage> {
                     head: 'Age',
                   ),
                   SizedBox(
-                    width: isPhone ? s.width * 0.17 : s.width * 0.1,
+                    width: isPhone ? MediaQuery.of(context).size.width * 0.17 : MediaQuery.of(context).size.width * 0.1,
                   ),
                   HeadLine(
                     head: 'Phone',
@@ -260,7 +259,7 @@ class _AddPageState extends State<AddPage> {
               Row(
                 children: [
                   ageField(context, isPhone, docAge),
-                  SizedBox(width: isPhone ? s.width * 0.02 : s.width * 0.02),
+                  SizedBox(width: isPhone ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.width * 0.02),
                   Expanded(child: phoneNumberField(isPhone, docPhone, context)),
                 ],
               ),
@@ -381,7 +380,7 @@ class _AddPageState extends State<AddPage> {
   //-----------------------------------------------------------------Doc Department special
   SizedBox docDepartments(bool isPhone, BuildContext context) {
     return SizedBox(
-            width: isPhone ? s.width * 0.873 : s.width * 0.862,
+            width: isPhone ? MediaQuery.of(context).size.width * 0.873 : MediaQuery.of(context).size.width * 0.862,
 
       child: TextFormField(
         controller: docDepart,
@@ -397,7 +396,7 @@ class _AddPageState extends State<AddPage> {
             ),
             child: GestureDetector(
               onTap: () {
-                showBottomSheet1(context, s.width < 600, docDepart);
+                showBottomSheet1(context, MediaQuery.of(context).size.width < 600, docDepart);
               },
               child: Icon(
                 Icons.add_circle_outlined,
@@ -472,7 +471,7 @@ class _AddPageState extends State<AddPage> {
             onPressed: () {
               reusableShowBottomSheet(
                 context,
-                s.width < 600,
+                MediaQuery.of(context).size.width < 600,
                 fileIcon: Icons.upload_outlined,
                 isfile: false,
                 photoLabel: "Take Photo",

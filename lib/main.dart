@@ -47,8 +47,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    initMediaQuery(context);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
@@ -73,7 +71,12 @@ class MyApp extends StatelessWidget {
             themeMode: themeProvider.themeMode,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
-            home: const SplashScreen(),
+            home: Builder(
+              builder: (context) {
+                initMediaQuery(context);
+                return const SplashScreen();
+              },
+            ),
           );
         },
       ),
