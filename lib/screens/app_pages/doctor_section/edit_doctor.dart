@@ -7,8 +7,7 @@ import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
-import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
-import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
+import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -170,20 +169,20 @@ class _EditDoctorState extends State<EditDoctor>
                         ),
                         const SizedBox(height: 30),
                         editField(isPhone, 'Name', "Enter doctor's name", name,
-                            nameValidator, TextInputType.text),
+                            AppValidators.validateName, TextInputType.text),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Age', "Enter age", age,
-                            ageValidator, TextInputType.number),
+                            AppValidators.validateAge, TextInputType.number),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Phone', 'Phone Number', phone,
-                            phoneNumberValidator, TextInputType.number),
+                            AppValidators.validatePhone, TextInputType.number),
                         const SizedBox(height: 20),
                         editField(
                             isPhone,
                             'Qualification',
                             "Enter qualification",
                             qualification,
-                            nameValidator,
+                            (val) => AppValidators.validateRequired(val, 'Qualification'),
                             TextInputType.text),
                         const SizedBox(height: 20),
                         editField(
@@ -191,7 +190,7 @@ class _EditDoctorState extends State<EditDoctor>
                           'Department',
                           "Enter department",
                           department,
-                          nameValidator,
+                          (val) => AppValidators.validateRequired(val, 'Department'),
                           TextInputType.text,
                           showAddButton: true,
                         ),
@@ -201,11 +200,11 @@ class _EditDoctorState extends State<EditDoctor>
                             'Experience',
                             "Enter Experience",
                             experience,
-                            experienceValidator,
+                            AppValidators.validateExperience,
                             TextInputType.number),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Fees', "Enter Fees", fees,
-                            feesValidator, TextInputType.number),
+                            AppValidators.validateFees, TextInputType.number),
                         const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: pressMe,

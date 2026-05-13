@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class TextsField extends StatefulWidget {
-  String hint;
-  TextEditingController controller;
-  IconButton?  TrailingIcon;
-  TextsField({super.key, required this.hint, required this.controller,this.TrailingIcon});
+  final String hint;
+  final TextEditingController controller;
+  final IconButton? TrailingIcon;
+  final String? Function(String?)? validator;
+  
+  const TextsField({
+    super.key, 
+    required this.hint, 
+    required this.controller,
+    this.TrailingIcon,
+    this.validator,
+  });
 
   @override
   State<TextsField> createState() => _TextsFieldState();
@@ -18,52 +26,39 @@ class _TextsFieldState extends State<TextsField> {
     return TextFormField(
       keyboardType: TextInputType.text,
       controller: widget.controller,
-      autovalidateMode:AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            width: 1.5,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              // ignore: deprecated_member_use
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              width: 1.5,
-            ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            width: 1.5,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-              width: 1.8,
-            ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.primary,
+            width: 1.8,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 13),
-          fillColor: Theme.of(context).cardColor,
-          filled: true,
-          hintText: widget.hint,
-          hintStyle: TextStyle(
-            color: Theme.of(context).hintColor,
-          ),
-          suffixIcon: widget.TrailingIcon,
-          ),
-
-      validator: (value) {
-        RegExp nameRegExp = RegExp(r"^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$");
-
-        if (value == null || value.isEmpty) {
-          return 'This field is required';
-        } else if (!nameRegExp.hasMatch(value)) {
-          return 'Enter a valid text';
-        }
-        return null;
-      },
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 13),
+        fillColor: Theme.of(context).cardColor,
+        filled: true,
+        hintText: widget.hint,
+        hintStyle: TextStyle(
+          color: Theme.of(context).hintColor,
+        ),
+        suffixIcon: widget.TrailingIcon,
+      ),
+      validator: widget.validator,
     );
   }
 }

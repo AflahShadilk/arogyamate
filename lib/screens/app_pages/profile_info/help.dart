@@ -19,13 +19,14 @@ class HelpPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle('About the App'),
-                      _buildContentCard(
+                      _buildSectionTitle(context, 'About the App'),
+                      _buildContentCard(context, 
                         'Arogya Mate is a systematic and user-friendly application designed to streamline daily hospital administration tasks. Our primary focus is to enhance efficiency, reduce workload, and improve time management for healthcare professionals.',
                       ),
                       
-                      _buildSectionTitle('How to Use This App'),
+                      _buildSectionTitle(context, 'How to Use This App'),
                       _buildStepSection(
+                        context: context,
                         step: 'Step 1: Getting Started',
                         content: [
                           'Arogya Mate features an intuitive interface that’s easy to navigate. After installation:',
@@ -36,9 +37,11 @@ class HelpPage extends StatelessWidget {
                       ),
                       
                       _buildStepSection(
+                        context: context,
                         step: 'Step 2: Main Features',
                         content: [
                           _buildFeatureItem(
+                            context,
                             'a. Home Page',
                             [
                               'View hospital photo',
@@ -47,9 +50,11 @@ class HelpPage extends StatelessWidget {
                               '- Night Shift: See doctors available at night',
                               'Search functionality to find specific doctors',
                               'Tap doctor names for details and appointments',
+                              'Search with filters',
                             ],
                           ),
                           _buildFeatureItem(
+                            context,
                             'b. Appointments Page',
                             [
                               'View and manage your appointments',
@@ -59,6 +64,7 @@ class HelpPage extends StatelessWidget {
                             ],
                           ),
                           _buildFeatureItem(
+                            context,
                             'c. Add Page',
                             [
                               'Section 1: Add appointments with patient details',
@@ -66,6 +72,7 @@ class HelpPage extends StatelessWidget {
                             ],
                           ),
                           _buildFeatureItem(
+                            context,
                             'd. Doctors Page',
                             [
                               'View all added doctors',
@@ -76,6 +83,7 @@ class HelpPage extends StatelessWidget {
                             ],
                           ),
                           _buildFeatureItem(
+                            context,
                             'e. Profile Page',
                             [
                               'Theme changer button',
@@ -96,12 +104,12 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.primary,
@@ -110,7 +118,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  Widget _buildContentCard(String content) {
+  Widget _buildContentCard(BuildContext context, String content) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -118,7 +126,7 @@ class HelpPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Text(
           content,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             height: 1.5,
             color: Theme.of(context).textTheme.bodyMedium?.color,
@@ -128,7 +136,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStepSection({required String step, required List<dynamic> content}) {
+  Widget _buildStepSection({required BuildContext context, required String step, required List<dynamic> content}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,7 +144,7 @@ class HelpPage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
           child: Text(
             step,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.secondary,
@@ -169,7 +177,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureItem(String title, List<String> details) {
+  Widget _buildFeatureItem(BuildContext context, String title, List<String> details) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(
@@ -177,7 +185,7 @@ class HelpPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.onSurfaceVariant,

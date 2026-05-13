@@ -154,7 +154,7 @@ class _DoctorViewState extends State<DoctorView> {
                     color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     shape: BoxShape.rectangle,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Icon(
                       Icons.file_copy_rounded,
                       color: Theme.of(context).colorScheme.primary,

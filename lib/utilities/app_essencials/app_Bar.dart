@@ -16,7 +16,7 @@ AppBar appBar(
     centerTitle: true,
     title: Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         color: Theme.of(context).colorScheme.onPrimary,
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ AppBar appBar(
                   "Confirm Deletion",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                content: const Text(
+                content: Text(
                   "Are you sure you want to delete this item?",
                   style: TextStyle(color: Theme.of(context).hintColor),
                 ),

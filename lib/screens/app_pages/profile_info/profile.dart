@@ -77,49 +77,45 @@ class _AccountPageState extends State<AccountPage> {
                       border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12)),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                     mainAxisAlignment: MainAxisAlignment.start,
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceEvenly,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => HelpPage()));
                           },
-                          child: Text(
+                          child: const Text(
                             'Help?',
                             style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                wordSpacing: 10),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Spacer(),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => AboutUsPage()));
                           },
-                          child: Text(
+                          child: const Text(
                             'About Us',
                             style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                wordSpacing: 10),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Spacer(),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
                                     TermsAndConditionsPage()));
                           },
-                          child: Text(
+                          child: const Text(
                             'Terms&Conditions',
                             style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                wordSpacing: 10),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],

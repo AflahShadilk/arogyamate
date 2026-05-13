@@ -18,6 +18,7 @@ import 'package:arogyamate/utilities/image_filesPicker/file_uploader.dart';
 import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
+import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -234,6 +235,7 @@ class _AddPageState extends State<AddPage> {
                     child: TextsField(
                       hint: "Enter Doctor's Name",
                       controller: docName,
+                      validator: AppValidators.validateName,
                     ),
                   ),
                 ],
@@ -264,6 +266,7 @@ class _AddPageState extends State<AddPage> {
               TextsField(
                 hint: 'Enter Qualification',
                 controller: docQualify,
+                validator: (val) => AppValidators.validateRequired(val, 'Qualification'),
               ),
               SizedBox(height: 24),
               HeadLine(head: 'Department'),
@@ -278,7 +281,7 @@ class _AddPageState extends State<AddPage> {
                 child: NumberField(
                   hint: 'Eg:10 Years',
                   controller: docExprnce,
-                  validate: validateYearsOfExperience,
+                  validate: AppValidators.validateExperience,
                 ),
               ),
               SizedBox(height: 24),
@@ -287,7 +290,7 @@ class _AddPageState extends State<AddPage> {
                 child: NumberField(
                   hint: 'Eg:300 per head',
                   controller: docFees,
-                  validate: validateFees,
+                  validate: AppValidators.validateFees,
                 ),
               ),
               SizedBox(height: 24),
@@ -381,7 +384,7 @@ class _AddPageState extends State<AddPage> {
 
       child: TextFormField(
         controller: docDepart,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (val) => AppValidators.validateRequired(val, 'Department'),
         decoration: InputDecoration(
           hintText: 'Eg: General',
           suffixIcon: Container(

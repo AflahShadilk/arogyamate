@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
@@ -14,7 +15,7 @@ import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
 import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
-import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
+import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,7 +74,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 HeadLine(
                   head: 'Name',
                 ),
-                TextsField(hint: 'Enter Name', controller: patientName),
+                TextsField(
+                    hint: 'Enter Name', 
+                    controller: patientName,
+                    validator: AppValidators.validateName,
+                ),
                 SizedBox(height: 20),
                 HeadLine(head: 'Genter'),
                 Row(
@@ -127,7 +132,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 ),
                 SizedBox(height: 20),
                 HeadLine(head: 'Address'),
-                TextsField(hint: 'Enter Address', controller: patientAddress),
+                TextsField(
+                    hint: 'Enter Address', 
+                    controller: patientAddress,
+                    validator: (val) => AppValidators.validateRequired(val, 'Address'),
+                ),
                 SizedBox(height: 20),
                 HeadLine(head: 'Department'),
                 textFieldWithBottomSheet(
@@ -202,7 +211,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 : null,
           ),
         ),
-        validator: nameValidator,
+        validator: (val) => AppValidators.validateRequired(val, hint),
       ),
     );
   }

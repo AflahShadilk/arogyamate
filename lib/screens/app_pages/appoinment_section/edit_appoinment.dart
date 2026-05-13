@@ -8,8 +8,7 @@ import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
-import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
-import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
+import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -109,13 +108,13 @@ class _EditAppointment extends State<EditAppoinment>
                        
                         const SizedBox(height: 30),
                         editField(isPhone, 'Name', "Enter Patient's name", name,
-                            nameValidator, TextInputType.text),
+                            AppValidators.validateName, TextInputType.text),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Age', "Enter age", age,
-                            ageValidator, TextInputType.number),
+                            AppValidators.validateAge, TextInputType.number),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Phone', 'Phone Number', phone,
-                            phoneNumberValidator, TextInputType.number),
+                            AppValidators.validatePhone, TextInputType.number),
                             const SizedBox(height: 20),
                             Row(
                 children: [
@@ -142,19 +141,19 @@ class _EditAppointment extends State<EditAppoinment>
                             'Address',
                             "Enter Address",
                             address,
-                            nameValidator,
+                            (val) => AppValidators.validateRequired(val, 'Address'),
                             TextInputType.text),
                         const SizedBox(height: 20),
                         editField(isPhone, 'Department', "Enter department",
-                            department, nameValidator, TextInputType.text),
+                            department, (val) => AppValidators.validateRequired(val, 'Department'), TextInputType.text),
                         const SizedBox(height: 20),
                         editField(
                             isPhone,
                             "Doctor's Name",
                             "Enter Name",
                             doctor,
-                            nameValidator,
-                            TextInputType.number),
+                            AppValidators.validateName,
+                            TextInputType.text),
                         const SizedBox(height: 20),
                         DatePickerField(controller: date),
                         const SizedBox(height: 20),

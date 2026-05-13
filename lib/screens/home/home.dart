@@ -103,8 +103,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Toggle('Day Shift', 'Night Shift', _selectedShift,
-                        _handleToggle),
+                    AppToggle(
+                      firstOne: 'Day Shift',
+                      secondOne: 'Night Shift',
+                      selectedIndex: _selectedShift,
+                      onToggle: _handleToggle,
+                    ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: isPhone ? s.width * 0.88 : s.width * 0.9,
@@ -165,7 +169,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _doctorCardList(List<Widget> cards) {
     if (cards.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'No doctors available for this shift.',
           style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
@@ -249,12 +253,14 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       data.name!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Row(
+                    Wrap(
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(

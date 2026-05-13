@@ -23,7 +23,7 @@ class _GenderSelectorState extends State<GenderSelector> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
-      width: 100,
+      width: 110,
       child: DropdownButtonFormField<String>(
         key: widget.genderKey,
         decoration: InputDecoration(
@@ -93,7 +93,7 @@ class _TitleSelectorState extends State<TitleSelector> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
-      width: 75,
+      width: 85,
       child: DropdownButtonFormField<String>(
         key: widget.titlekey,
         decoration: InputDecoration(
@@ -119,7 +119,7 @@ class _TitleSelectorState extends State<TitleSelector> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Theme.of(context).colorScheme.primary,
               width: 1.8,
             ),

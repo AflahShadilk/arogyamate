@@ -95,7 +95,7 @@ class _FileUploaderState extends State<FileUploader> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.picture_as_pdf,
                         size: 42,
                         color: Theme.of(context).colorScheme.error,
