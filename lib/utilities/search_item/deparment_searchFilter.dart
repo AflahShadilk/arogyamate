@@ -33,7 +33,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
     final ctrl = context.watch<DoctorController>();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: widget.isPhone ? 0 : 20),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
@@ -41,7 +41,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
           BoxShadow(
             color: Theme.of(context).shadowColor.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -56,12 +56,12 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           SizedBox(
             width: isPhone(context) ? s.width * 0.9 : s.width * 0.5,
             child: Row(
               children: [
-                SizedBox(
+                 SizedBox(
                   width: 120,
                   child: _buildDropdown(
                     'Department',
@@ -74,7 +74,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                   ),
                 ),
                 Spacer(),
-                SizedBox(
+                 SizedBox(
                   width: 120,
                   child: _buildDropdown(
                     'Qualification',
@@ -95,7 +95,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
               child: Row(
                 children: [
                   if (widget.showAgefilter)
-                    SizedBox(
+                     SizedBox(
                       width: 120,
                       child: _buildDropdown(
                         'Age',
@@ -110,7 +110,7 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
                     ),
                   if (widget.showAgefilter && widget.showFeesfilter) Spacer(),
                   if (widget.showFeesfilter)
-                    SizedBox(
+                     SizedBox(
                       width: 120,
                       child: _buildDropdown(
                         'Fees',
@@ -138,10 +138,10 @@ class _DoctorSearchFilterState extends State<DoctorSearchFilter> {
       children: [
         Text(label,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         DropdownButton<String>(
           value: selectedValue,
-          hint: Text('Select '),
+          hint: const Text('Select '),
           isExpanded: true,
           items: items.map((String item) {
             return DropdownMenuItem<String>(

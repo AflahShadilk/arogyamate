@@ -12,12 +12,12 @@ class TermsAndConditionsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 50,),
+               const SizedBox(height: 50,),
               Text(
                 'Terms and Conditions',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+               const SizedBox(height: 10),
               buildSectionTitle('1. Introduction'),
               buildParagraph('By using ArogyaMate, you agree to the following Terms and Conditions.'),
               buildSectionTitle('2. Use of the App'),
@@ -33,7 +33,7 @@ class TermsAndConditionsPage extends StatelessWidget {
               buildBulletPoint('Availability of appointments is not guaranteed.'),
               buildSectionTitle('5. Changes to Terms'),
               buildParagraph('We reserve the right to update these terms at any time.'),
-              SizedBox(height: 20),
+               const SizedBox(height: 20),
               Text(
                 '🚀 ArogyaMate – Making Healthcare Access Simple and Convenient.',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

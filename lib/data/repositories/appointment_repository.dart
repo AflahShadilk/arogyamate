@@ -60,7 +60,8 @@ class AppointmentRepository {
     return {
       'departments': all.map((a) => a.department ?? '').toSet().where((s) => s.isNotEmpty).toList(),
       'doctors': all.map((a) => a.doctorName ?? '').toSet().where((s) => s.isNotEmpty).toList(),
-      'bloodGroups': all.map((a) => a.blood ?? '').toSet().where((s) => s.isNotEmpty).toList(),
+      'blood': all.map((a) => a.blood ?? '').toSet().where((s) => s.isNotEmpty).toList(),
+      'address': all.map((a) => a.address ?? '').toSet().where((s) => s.isNotEmpty).toList(),
     };
   }
 }

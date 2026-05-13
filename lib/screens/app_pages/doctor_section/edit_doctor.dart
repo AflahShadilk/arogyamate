@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:arogyamate/controllers/doctor_form_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
@@ -31,7 +32,7 @@ class _EditDoctorState extends State<EditDoctor>
   final TextEditingController experience = TextEditingController();
   final TextEditingController fees = TextEditingController();
 
-  String? updateImage;
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -56,7 +57,10 @@ class _EditDoctorState extends State<EditDoctor>
       department.text = widget.doctor!.department!;
       experience.text = widget.doctor!.years!;
       fees.text = widget.doctor!.fees!;
-      updateImage = widget.doctor!.imagePath;
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<DoctorFormController>().setUpdateImagePath(widget.doctor!.imagePath);
+      });
     }
   }
 
@@ -109,63 +113,65 @@ class _EditDoctorState extends State<EditDoctor>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 3,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                                    spreadRadius: 2,
-                                    blurRadius: 8,
-                                  ),
-                                ],
-                              ),
-                              child: CircleAvatar(
-                                backgroundImage: updateImage != null
-                                    ?kIsWeb?NetworkImage(updateImage!): FileImage(File(updateImage!))
-                                    : null,
-                                radius: 50,
-                                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                                child: updateImage == null
-                                    ? Icon(
-                                        Icons.person,
-                                        size: 50,
-                                        color: Theme.of(context).colorScheme.primary,
-                                      )
-                                    : null,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                final pickedImage = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                if (pickedImage != null) {
-                                  setState(() {
-                                    updateImage = pickedImage.path;
-                                  });
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
+                        Consumer<DoctorFormController>(
+                          builder: (context, formCtrl, _) => Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
                                   shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    width: 3,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 8,
+                                    ),
+                                  ],
                                 ),
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Theme.of(context).colorScheme.onPrimary,
-                                  size: 20,
+                                child: CircleAvatar(
+                                  backgroundImage: formCtrl.updateImagePath != null
+                                      ? kIsWeb
+                                          ? NetworkImage(formCtrl.updateImagePath!)
+                                          : FileImage(File(formCtrl.updateImagePath!))
+                                      : null,
+                                  radius: 50,
+                                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                  child: formCtrl.updateImagePath == null
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 50,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        )
+                                      : null,
                                 ),
                               ),
-                            ),
-                          ],
+                              GestureDetector(
+                                onTap: () async {
+                                  final pickedImage = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+                                  if (pickedImage != null) {
+                                    formCtrl.setUpdateImagePath(pickedImage.path);
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Theme.of(context).colorScheme.onPrimary,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 30),
                         editField(isPhone, 'Name', "Enter doctor's name", name,
@@ -259,41 +265,40 @@ class _EditDoctorState extends State<EditDoctor>
           ),
         ),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: key,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          keyboardType: kb,
-          decoration: InputDecoration(
-            hintText: hint,
-            suffixIcon: key == department
-                ? (department.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          department.clear();
-                          setState(() {});
-                        },
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          showBottomSheet1(context, s.width < 600, department);
-                          setState(() {});
-                        },
-                        child: Icon(Icons.add_circle_outlined,
-                            size: 30, color: Theme.of(context).colorScheme.primary),
-                      ))
-                : (key.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          key.clear();
-                          setState(() {});
-                        },
-                      )
-                    : null),
+        ListenableBuilder(
+          listenable: key,
+          builder: (context, _) => TextFormField(
+            controller: key,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            keyboardType: kb,
+            decoration: InputDecoration(
+              hintText: hint,
+              suffixIcon: key == department
+                  ? (department.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            department.clear();
+                          },
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            showBottomSheet1(context, s.width < 600, department);
+                          },
+                          child: Icon(Icons.add_circle_outlined,
+                              size: 30, color: Theme.of(context).colorScheme.primary),
+                        ))
+                  : (key.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            key.clear();
+                          },
+                        )
+                      : null),
+            ),
+            validator: validatorr,
           ),
-          validator: validatorr,
-          onChanged: (value) => setState(() {}),
         ),
       ],
     );
@@ -308,7 +313,8 @@ class _EditDoctorState extends State<EditDoctor>
       final departments = department.text.trim();
       final exprnce = experience.text.trim();
       final feeses = fees.text.trim();
-      final images = updateImage;
+      final formCtrl = context.read<DoctorFormController>();
+      final images = formCtrl.updateImagePath;
 
       final updateDetails = DoctorModel(
           id: widget.doctor?.id,
@@ -322,17 +328,15 @@ class _EditDoctorState extends State<EditDoctor>
           imagePath: images);
       await context.read<DoctorController>().update(updateDetails);
 
-      // Clear fields with animation
-      setState(() {
-        name.clear();
-        age.clear();
-        phone.clear();
-        qualification.clear();
-        department.clear();
-        fees.clear();
-        experience.clear();
-        updateImage = null;
-      });
+      // Clear fields
+      name.clear();
+      age.clear();
+      phone.clear();
+      qualification.clear();
+      department.clear();
+      fees.clear();
+      experience.clear();
+      formCtrl.clearForm();
 
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(

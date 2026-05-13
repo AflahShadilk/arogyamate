@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _opacity = 1.0;
       });
     });
-    Future.delayed(Duration(seconds: 3),()async{await getLoggCheck();});
+    Future.delayed(const Duration(seconds: 3),()async{await getLoggCheck();});
   }
  
   Future<void> getLoggCheck() async {
@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     color: Theme.of(context).shadowColor.withOpacity(0.1),
                     blurRadius: 15,
                     spreadRadius: 1,
-                    offset: Offset(0, 4),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 borderRadius: BorderRadius.circular(100),
                 child: AnimatedOpacity(
                   opacity: _opacity,
-                  duration: Duration(seconds: 2),
+                  duration: const Duration(seconds: 2),
                   child: Image.asset(
                     'assets/images/spash logo.jpeg',
                     width: 180,
@@ -125,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
               bottom: 50,
               child: AnimatedOpacity(
                 opacity: _opacity,
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
                 child: Text(
                   "Version 1.0.0",
                   style: TextStyle(

@@ -21,7 +21,7 @@ class _GenderSelectorState extends State<GenderSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return  SizedBox(
       height: 45,
       width: 110,
       child: DropdownButtonFormField<String>(
@@ -91,7 +91,7 @@ class _TitleSelectorState extends State<TitleSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return  SizedBox(
       height: 45,
       width: 85,
       child: DropdownButtonFormField<String>(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/core/session/session_manager.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/about_us.dart';
 import 'package:arogyamate/screens/app_pages/profile_info/help.dart';
@@ -9,6 +10,7 @@ import 'package:arogyamate/core/theme/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -21,25 +23,15 @@ class _AccountPageState extends State<AccountPage> {
   @override
   void initState() {
     super.initState();
-    getImage();
-    getText();
   }
 
-  Future<void> getImage() async {
-    image = await SessionManager.getProfileImage();
-    setState(() {});
-  }
 
-  String? image;
 
-  Future<void> getText() async {
-    textt = await SessionManager.getHospitalName();
-    id = await SessionManager.getHospitalId();
-    setState(() {});
-  }
 
-  String? textt = '';
-  String? id = '';
+
+
+
+
   @override
   Widget build(BuildContext context) {
     Size s = MediaQuery.of(context).size;
@@ -59,17 +51,23 @@ class _AccountPageState extends State<AccountPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: isPhone ? 30 : 30),
+                  const SizedBox(height: 30),
                   const Align(
                     alignment: Alignment.topRight,
                     child: ThemeToggleButton(),
                   ),
-                  _buildProfileAvatar(isPhone),
-                  SizedBox(height: isPhone ? 25 : 30),
-                  _buildInfoCard(isPhone, s),
-                  SizedBox(height: isPhone ? 110 : 60),
+                  Consumer<SessionController>(
+                    builder: (context, session, _) => Column(
+                      children: [
+                        _buildProfileAvatar(isPhone, session.profileImage),
+                        const SizedBox(height: 25),
+                        _buildInfoCard(isPhone, s, session.hospitalName, session.hospitalId),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 110),
                   _buildSignOutButton(isPhone, s),
-                  SizedBox(height: isPhone ? 30 : 70),
+                  const SizedBox(height: 30),
                   Container(
                     width: isPhone?s.width:s.width,
                     decoration: BoxDecoration(
@@ -121,7 +119,7 @@ class _AccountPageState extends State<AccountPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -132,7 +130,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
 
-  Widget _buildProfileAvatar(bool isPhone) {
+  Widget _buildProfileAvatar(bool isPhone, String? image) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -141,17 +139,17 @@ class _AccountPageState extends State<AccountPage> {
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           backgroundImage: (image != null && image!.isNotEmpty)
               ?(kIsWeb?NetworkImage(image!) as ImageProvider: FileImage(File(image!)))
-              : AssetImage('assets/images/hospital.jpg'),
+              : const AssetImage('assets/images/hospital.jpg') as ImageProvider,
           child: (image == null ||image!.isEmpty )
               ? Icon(Icons.photo_camera_outlined,
                   size: 40, color: Theme.of(context).colorScheme.onSurfaceVariant)
-              : SizedBox(),
+              : const SizedBox(),
         ),
       ],
     );
   }
 
-  Widget _buildInfoCard(bool isPhone, Size s) {
+  Widget _buildInfoCard(bool isPhone, Size s, String? hospitalName, String? hospitalId) {
     return Container(
       width: isPhone ? s.width * 0.9 : s.width * 0.5,
       padding: const EdgeInsets.all(20),
@@ -169,30 +167,9 @@ class _AccountPageState extends State<AccountPage> {
       ),
       child: Column(
         children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Container(
-          //       height: isPhone ? 40 : 45,
-          //       width: isPhone ? 40 : 45,
-          //       decoration: BoxDecoration(
-          //         gradient: LinearGradient(
-          //           colors: [Colors.blue[400]!, Colors.blue[600]!],
-          //           begin: Alignment.topLeft,
-          //           end: Alignment.bottomRight,
-          //         ),
-          //         borderRadius: BorderRadius.circular(12),
-          //       ),
-          //       child: IconButton(
-          //         onPressed: () {},
-          //         icon: const Icon(Icons.edit, color: Colors.white, size: 20),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           const SizedBox(height: 10),
-          _buildDetailRow(isPhone, 'Hospital', textt),
-          _buildDetailRow(isPhone, 'ID', id),
+          _buildDetailRow(isPhone, 'Hospital', hospitalName),
+          _buildDetailRow(isPhone, 'ID', hospitalId),
         ],
       ),
     );

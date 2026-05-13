@@ -163,13 +163,13 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           SizedBox(
             width: isPhone(context)?s.width*0.9:s.width*0.5,
             child: Row(
               
               children: [
-                SizedBox(
+                 SizedBox(
                   width: 120,
                   child: _buildDropdown(
                     'Department',
@@ -182,7 +182,7 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                   ),
                 ),
                 Spacer(),
-                SizedBox(
+                 SizedBox(
                   width: 120,
                   child: _buildDropdown(
                     'Doctor',
@@ -201,7 +201,7 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
             width: isPhone(context)?s.width*0.9:s.width*0.5,
             child: Row(
               children: [
-                SizedBox(
+                 SizedBox(
                   width: 120,
                   child: _buildDropdown(
                       'Blood Group',
@@ -213,7 +213,7 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
                           }),
                 ),
                 Spacer(),
-                SizedBox(
+                 SizedBox(
                     width: 120,
                     child: _buildDropdown(
                         "Address",
@@ -238,7 +238,7 @@ class _AppoinmentSearchFilterState extends State<AppoinmentSearchFilter> {
       children: [
         Text(label,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         DropdownButton<String>(
           value: selectedValue,
           hint: Text('Select '),

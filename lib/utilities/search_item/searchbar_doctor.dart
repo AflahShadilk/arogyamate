@@ -37,7 +37,7 @@ class _CommonSearchState extends State<CommonSearch> {
               color: Theme.of(context).shadowColor.withOpacity(0.1),
               blurRadius: 5,
               spreadRadius: 2,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),

@@ -15,47 +15,8 @@ class RecieptPage extends StatefulWidget {
 
 class _RecieptPageState extends State<RecieptPage> {
   final TextEditingController searchMe = TextEditingController();
-  bool showSearchContainer = false;
-  String? selectedDepartment;
-  String? selectedDoctor;
-  String? selectedBlood;
-  String? selectedAddress;
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctrl = context.read<AppointmentController>();
-      if (mounted) {
-        setState(() {
-          departments = ctrl.appointments
-              .map((d) => d.department ?? '')
-              .where((d) => d.isNotEmpty)
-              .toSet()
-              .toList();
-          doctor = ctrl.appointments
-              .map((d) => d.doctorName ?? '')
-              .where((q) => q.isNotEmpty)
-              .toSet()
-              .toList();
-          blood = ctrl.appointments
-              .map((b) => b.blood ?? "")
-              .where((b) => b.isNotEmpty)
-              .toSet()
-              .toList();
-          address = ctrl.appointments
-              .map((a) => a.address ?? "")
-              .where((a) => a.isNotEmpty)
-              .toSet()
-              .toList();
-        });
-      }
-    });
-  }
 
-  List<String> departments = [];
-  List<String> doctor = [];
-  List<String> blood = [];
-  List<String> address = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,55 +42,51 @@ class _RecieptPageState extends State<RecieptPage> {
                       ),
                     ),
                     const SizedBox(height: 25),
-                    CommonSearch1(
-                      isPhone: isPhone,
-                      hint: "Search",
-                      controller: searchMe,
-                      onFilterPressed: () {
-                        setState(() {
-                          showSearchContainer = !showSearchContainer;
-                        });
-                      },
-                      onClearPressed: () {
-                        setState(() {
-                          showSearchContainer = false;
-                          selectedDoctor = null;
-                          selectedDepartment = null;
-                          selectedBlood = null;
-                          selectedAddress = null;
-                        });
-                      },
-                      onSearch: (value) => context.read<AppointmentController>().search(value),
+                    Consumer<AppointmentController>(
+                      builder: (context, ctrl, _) => Column(
+                        children: [
+                          CommonSearch1(
+                            isPhone: isPhone,
+                            hint: "Search",
+                            controller: searchMe,
+                            onFilterPressed: () => ctrl.toggleSearchContainer(),
+                            onClearPressed: () {
+                              ctrl.setShowSearchContainer(false);
+                              ctrl.clearFilter();
+                            },
+                            onSearch: (value) => ctrl.search(value),
+                          ),
+                          if (ctrl.showSearchContainer)
+                            AppoinmentSearchFilter(
+                                isPhone: isPhone,
+                                onFiltersSelected:
+                                    (department, doctor, bloodGroup, address) {
+                                  ctrl.setFilterSelections(
+                                        department: department,
+                                        doctor: doctor,
+                                        blood: bloodGroup,
+                                        address: address,
+                                      );
+                                  ctrl.search(searchMe.text);
+                                }),
+                        ],
+                      ),
                     ),
-                    if (showSearchContainer)
-                      AppoinmentSearchFilter(
-                          isPhone: isPhone,
-                          onFiltersSelected:
-                              (department, doctor, bloodGroup, address) {
-                            setState(() {
-                              selectedDepartment = department;
-                              selectedDoctor = doctor;
-                              selectedBlood = bloodGroup;
-                              selectedAddress = address;
-                            });
-                            context.read<AppointmentController>().search(searchMe.text);
-                          }),
                     const SizedBox(height: 30),
                     Expanded(
                       child: Consumer<AppointmentController>(
                         builder:
                             (context, ctrl, _) {
                           final appoinmentList = ctrl.appointments;
-                          final filterAppoinment =
-                              appoinmentList.where((patient) {
-                            bool setDepartment = selectedDepartment == null ||
-                                patient.department == selectedDepartment;
-                            bool setDoctor = selectedDoctor == null ||
-                                patient.doctorName == selectedDoctor;
-                            bool setBlood = selectedBlood == null ||
-                                patient.blood == selectedBlood;
-                            bool setAdderss = selectedAddress == null ||
-                                patient.address == selectedAddress;
+                          final filterAppoinment = appoinmentList.where((patient) {
+                            bool setDepartment = ctrl.selectedDepartment == null ||
+                                patient.department == ctrl.selectedDepartment;
+                            bool setDoctor = ctrl.selectedDoctor == null ||
+                                patient.doctorName == ctrl.selectedDoctor;
+                            bool setBlood = ctrl.selectedBlood == null ||
+                                patient.blood == ctrl.selectedBlood;
+                            bool setAdderss = ctrl.selectedAddress == null ||
+                                patient.address == ctrl.selectedAddress;
                             return setDepartment &&
                                 setDoctor &&
                                 setBlood &&

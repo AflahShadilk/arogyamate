@@ -11,28 +11,28 @@ class AboutUsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
             Text(
               'Welcome to ArogyaMate',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               'ArogyaMate is your trusted offline hospital appointment booking companion. '
               'We aim to make healthcare access seamless, even without an internet connection.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Why Choose ArogyaMate?',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             buildBulletPoint('Offline Functionality – Book appointments without internet.'),
             buildBulletPoint('User-Friendly – Simple interface for all age groups.'),
             buildBulletPoint('Fast & Reliable – Securely stores booking history.'),
             buildBulletPoint('Hospital Integration – Works with hospitals and clinics.'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               '🚀 ArogyaMate – Healthcare, Anytime, Anywhere.',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

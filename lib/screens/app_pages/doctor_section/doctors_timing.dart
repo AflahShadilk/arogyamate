@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:arogyamate/controllers/doctor_form_controller.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +22,7 @@ class TimingDoctor extends StatefulWidget {
 }
 
 class _TimingDoctorState extends State<TimingDoctor> {
-  String startTime = '';
-  String endTime = '';
-  String status = '';
-  bool isLeave = false;
+
   TextEditingController dateController = TextEditingController();
   TextEditingController enddateController = TextEditingController();
 
@@ -77,7 +75,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                         Icons.school_outlined,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(
@@ -92,87 +90,94 @@ class _TimingDoctorState extends State<TimingDoctor> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: DropdownButtonFormField<String>(
-                    value: status.isEmpty ? null : status,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.surfaceVariant ?? Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                  child: Consumer<DoctorFormController>(
+                    builder: (context, formCtrl, _) => DropdownButtonFormField<String>(
+                      value: formCtrl.status.isEmpty ? null : formCtrl.status,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceVariant ?? Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                    ),
-                    hint: Text("Select Shift", style: TextStyle(fontSize: 16)),
-                    items: [
-                      Constants.leave,
-                      Constants.fullday,
-                      Constants.halfday,
-                      Constants.nightshift,
-                    ].map((String shift) {
-                      return DropdownMenuItem<String>(
-                        value: shift,
-                        child: Text(shift, style: TextStyle(fontSize: 16)),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      status = newValue!;
+                      hint: const Text("Select Shift", style: TextStyle(fontSize: 16)),
+                      items: [
+                        Constants.leave,
+                        Constants.fullday,
+                        Constants.halfday,
+                        Constants.nightshift,
+                      ].map((String shift) {
+                        return DropdownMenuItem<String>(
+                          value: shift,
+                          child: Text(shift, style: TextStyle(fontSize: 16)),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        final newStatus = newValue!;
+                        String newStartTime = '';
+                        String newEndTime = '';
 
-                      if (status == Constants.leave) {
-                        // startTime = '0';
-                        // endTime = '0';
-                      } else if (status == Constants.fullday) {
-                        startTime = Constants.fulldatTime[0];
-                        endTime = Constants.fulldatTime[1];
-                      } else if (status == Constants.halfday) {
-                        startTime = Constants.halfdayTime[0];
-                        endTime = Constants.halfdayTime[1];
-                      } else if (status == Constants.nightshift) {
-                        startTime = Constants.nightshiftTime[0];
-                        endTime = Constants.nightshiftTime[1];
-                      }
-                      setState(() {});
-                    },
+                        if (newStatus == Constants.fullday) {
+                          newStartTime = Constants.fulldatTime[0];
+                          newEndTime = Constants.fulldatTime[1];
+                        } else if (newStatus == Constants.halfday) {
+                          newStartTime = Constants.halfdayTime[0];
+                          newEndTime = Constants.halfdayTime[1];
+                        } else if (newStatus == Constants.nightshift) {
+                          newStartTime = Constants.nightshiftTime[0];
+                          newEndTime = Constants.nightshiftTime[1];
+                        }
+                        formCtrl.setSchedule(
+                          status: newStatus,
+                          startTime: newStartTime,
+                          endTime: newEndTime,
+                        );
+                      },
+                    ),
                   ),
                 ),
-                status == Constants.leave
-                    ? Padding(
+                Consumer<DoctorFormController>(
+                  builder: (context, formCtrl, _) {
+                    final status = formCtrl.status;
+                    final startTime = formCtrl.startTime;
+                    final endTime = formCtrl.endTime;
+
+                    if (status == Constants.leave) {
+                      return Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           children: [
                             Row(
                               children: [
                                 SizedBox(
-                                    width: isPhone
-                                        ? s.width * 0.36
-                                        : s.width * 0.36,
-                                    child: Column(
-                                      children: [
-                                        HeadLine(head: 'Start Date'),
-                                        DatePickerField(
-                                            controller: dateController),
-                                      ],
-                                    )),
-                                SizedBox(width: 30),
+                                  width: isPhone ? s.width * 0.36 : s.width * 0.36,
+                                  child: Column(
+                                    children: [
+                                      HeadLine(head: 'Start Date'),
+                                      DatePickerField(controller: dateController),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 30),
                                 SizedBox(
-                                    width: isPhone
-                                        ? s.width * 0.36
-                                        : s.width * 0.36,
-                                    child: Column(
-                                      children: [
-                                        HeadLine(head: 'End Date'),
-                                        DatePickerField(
-                                            controller: enddateController),
-                                      ],
-                                    )),
+                                  width: isPhone ? s.width * 0.36 : s.width * 0.36,
+                                  child: Column(
+                                    children: [
+                                      HeadLine(head: 'End Date'),
+                                      DatePickerField(controller: enddateController),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             ElevatedButton(
                               onPressed: () async {
                                 if (dateController.text.isEmpty ||
                                     enddateController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                         content: Text(
                                             'Please select both start and end dates')),
                                   );
@@ -187,11 +192,11 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                   if (startDate.isAfter(endDate) ||
                                       startDate.isAtSameMomentAs(endDate)) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                           content: Text(
                                               'Start date should be earlier than End date')),
                                     );
-                                    return; 
+                                    return;
                                   }
                                 }
                                 await context.read<DoctorController>().setStatus(
@@ -199,16 +204,15 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                     status: status,
                                     leaveDate: dateController.text,
                                     endLeaveDate: enddateController.text);
-                                    // ignore: use_build_context_synchronously
+                                // ignore: use_build_context_synchronously
                                 Navigator.pop(context);
-                                
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(context).colorScheme.primary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
                               ),
                               child: Text(
@@ -220,8 +224,8 @@ class _TimingDoctorState extends State<TimingDoctor> {
                                 ),
                               ),
                             ),
-                            if (isLeave) ...[
-                              SizedBox(height: 15),
+                            if (formCtrl.isLeave) ...[
+                              const SizedBox(height: 15),
                               Text(
                                 'Leave from ${dateController.text} to ${enddateController.text}',
                                 style: TextStyle(
@@ -232,95 +236,43 @@ class _TimingDoctorState extends State<TimingDoctor> {
                             ]
                           ],
                         ),
-                      )
-                    : status == Constants.fullday
-                        ? Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                
-                                  context.read<DoctorController>().setStatus(
+                      );
+                    } else if (status == Constants.fullday ||
+                        status == Constants.halfday ||
+                        status == Constants.nightshift) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context.read<DoctorController>().setStatus(
                                     widget.doctor!,
                                     status: status,
                                     startTime: startTime,
                                     endTime: endTime,
                                   );
-                                  Navigator.pop(context);
-                                  
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.access_time, size: 20),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      "$startTime - $endTime",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
+                              Navigator.pop(context);
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.access_time, size: 20),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "$startTime - $endTime",
+                                  style: const TextStyle(fontSize: 16),
                                 ),
-                              ),
+                              ],
                             ),
-                          )
-                        : status == Constants.halfday
-                            ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      context.read<DoctorController>().setStatus(
-                                        widget.doctor!,
-                                        status: status,
-                                        startTime: startTime,
-                                        endTime: endTime,
-                                      );
-                                       Navigator.pop(context);
-                                     
-                                    },
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.access_time, size: 20),
-                                        SizedBox(width: 8), // Spacing
-                                        Text(
-                                          "$startTime - $endTime", // Show time range
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : status == Constants.nightshift
-                                ? Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Center(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          context.read<DoctorController>().setStatus(
-                                              widget.doctor!,
-                                              status: status,
-                                              startTime: startTime,
-                                              endTime: endTime);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.access_time, size: 20),
-                                            SizedBox(width: 8), // Spacing
-                                            Text(
-                                              "$startTime - $endTime", // Show time range
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(),
-                SizedBox(height: 20),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

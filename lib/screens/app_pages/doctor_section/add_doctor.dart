@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, must_be_immutable, duplicate_ignore
 import 'dart:io';
 import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:arogyamate/controllers/doctor_form_controller.dart';
+import 'package:arogyamate/controllers/navigation_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 
@@ -23,7 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-File? uploadingFile;
+
 
 class AddPage extends StatefulWidget {
   DoctorModel? doctor;
@@ -34,7 +36,6 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  File? profileImage;
 
   final TextEditingController genter = TextEditingController();
   final TextEditingController docName = TextEditingController();
@@ -47,11 +48,8 @@ class _AddPageState extends State<AddPage> {
   final titleController = GlobalKey<FormFieldState<String>>();
   //---------------------------------------------------------------------------------
 
-  int _selectedShift = 0;
   void _handleToggle(int index) {
-    setState(() {
-      _selectedShift = index;
-    });
+    context.read<NavigationController>().setAddSectionIndex(index);
   }
 
   @override
@@ -83,15 +81,17 @@ class _AddPageState extends State<AddPage> {
                   children: [
                     Column(
                       children: [
-                        AppToggle(
-                          firstOne: 'Appoinment',
-                          secondOne: 'Add Doctor',
-                          selectedIndex: _selectedShift,
-                          onToggle: _handleToggle,
+                        Consumer<NavigationController>(
+                          builder: (context, navCtrl, _) => AppToggle(
+                            firstOne: 'Appoinment',
+                            secondOne: 'Add Doctor',
+                            selectedIndex: navCtrl.addSectionIndex,
+                            onToggle: _handleToggle,
+                          ),
                         )
                       ],
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     Expanded(
                         child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 500),
@@ -108,13 +108,15 @@ class _AddPageState extends State<AddPage> {
                           ),
                         );
                       },
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(children: [
-                          if (_selectedShift == 0) AppointmentSection(),
-                          if (_selectedShift == 1)
-                            DoctorDetails(isPhone, context)
-                        ]),
+                      child: Consumer<NavigationController>(
+                        builder: (context, navCtrl, _) => SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(children: [
+                            if (navCtrl.addSectionIndex == 0) AppointmentSection(),
+                            if (navCtrl.addSectionIndex == 1)
+                              DoctorDetails(isPhone, context)
+                          ]),
+                        ),
                       ),
                     ))
                   ],
@@ -140,85 +142,86 @@ class _AddPageState extends State<AddPage> {
                   SizedBox(
                     height: 100,
                     width: 100,
-                    child: GestureDetector(
-                      onTap: () {
-                        reusableShowBottomSheet(
-                          context,
-                          s.width < 600,
-                          fileIcon: Icons.upload_outlined,
-                          isfile: false,
-                          photoLabel: "Take Photo",
-                          fileLabel: "Upload File",
-                          onPhotoSelected: (File? photo) {
-                            if (photo != null) {
-                              setState(() {
-                                profileImage = photo;
-                              });
-                            }
-                          },
-                          onFileSelected: (File? file) {
-                            if (file != null) {
-                              setState(() {
-                                profileImage = file;
-                              });
-                            }
-                          },
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                            width: 4,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              // ignore: deprecated_member_use
-                              color: Theme.of(context).shadowColor.withOpacity(0.12),
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+                    child: Consumer<DoctorFormController>(
+                      builder: (context, formCtrl, _) => GestureDetector(
+                        onTap: () {
+                          reusableShowBottomSheet(
+                            context,
+                            s.width < 600,
+                            fileIcon: Icons.upload_outlined,
+                            isfile: false,
+                            photoLabel: "Take Photo",
+                            fileLabel: "Upload File",
+                            onPhotoSelected: (File? photo) {
+                              if (photo != null) {
+                                formCtrl.setProfileImage(photo);
+                              }
+                            },
+                            onFileSelected: (File? file) {
+                              if (file != null) {
+                                formCtrl.setProfileImage(file);
+                              }
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                              width: 4,
                             ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                          backgroundImage: profileImage != null
-                              ? kIsWeb
-                                  ? NetworkImage(profileImage!.path)
-                                  : FileImage(File(profileImage!.path))
-                              : null,
-                          child: profileImage == null
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.photo_camera_outlined,
-                                      size: 40,
-                                      color: Theme.of(context).colorScheme.primary,
+                            boxShadow: [
+                              BoxShadow(
+                                // ignore: deprecated_member_use
+                                color: Theme.of(context).shadowColor.withOpacity(0.12),
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                            backgroundImage: formCtrl.profileImage != null
+                                ? kIsWeb
+                                    ? NetworkImage(formCtrl.profileImage!.path)
+                                    : FileImage(File(formCtrl.profileImage!.path))
+                                : null,
+                            child: formCtrl.profileImage == null
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                      shape: BoxShape.circle,
                                     ),
-                                  ),
-                                )
-                              : null,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.photo_camera_outlined,
+                                        size: 40,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 6),
-                  if (profileImage == null)
-                    Text(
-                      "Add Photo",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                  Consumer<DoctorFormController>(
+                    builder: (context, formCtrl, _) => formCtrl.profileImage == null
+                        ? Text(
+                            "Add Photo",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -230,7 +233,7 @@ class _AddPageState extends State<AddPage> {
                   TitleSelector(
                     titlekey: titleController,
                   ),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   Expanded(
                     child: TextsField(
                       hint: "Enter Doctor's Name",
@@ -240,7 +243,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               Row(
                 children: [
                   HeadLine(
@@ -261,21 +264,21 @@ class _AddPageState extends State<AddPage> {
                   Expanded(child: phoneNumberField(isPhone, docPhone, context)),
                 ],
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               HeadLine(head: 'Qualification'),
               TextsField(
                 hint: 'Enter Qualification',
                 controller: docQualify,
                 validator: (val) => AppValidators.validateRequired(val, 'Qualification'),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               HeadLine(head: 'Department'),
               Row(
                 children: [
                   Expanded(child: docDepartments(isPhone, context)),
                 ],
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               HeadLine(head: "Years of Experience"),
               Form(
                 child: NumberField(
@@ -284,7 +287,7 @@ class _AddPageState extends State<AddPage> {
                   validate: AppValidators.validateExperience,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               HeadLine(head: "Fees Structure"),
               Form(
                 child: NumberField(
@@ -293,79 +296,77 @@ class _AddPageState extends State<AddPage> {
                   validate: AppValidators.validateFees,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               HeadLine(head: 'Upload Document'),
-              Row(
-                children: [
-                  FileUploader(
-                    key: UniqueKey(),
-                    isPhone: isPhone,
-                    onFileSelected: (File? file) {
-                      if (file != null) {
-                        setState(() {
-                          uploadingFile = file;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 12),
-                  if (uploadingFile != null)
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                            width: 1,
+              Consumer<DoctorFormController>(
+                builder: (context, formCtrl, _) => Row(
+                  children: [
+                    FileUploader(
+                      key: UniqueKey(),
+                      isPhone: isPhone,
+                      onFileSelected: (File? file) {
+                        if (file != null) {
+                          formCtrl.setUploadingFile(file);
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    if (formCtrl.uploadingFile != null)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "File Uploaded",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      formCtrl.uploadingFile!.path.split('/').last,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        // ignore: deprecated_member_use
+                                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close,
+                                        color: Theme.of(context).colorScheme.error, size: 18),
+                                    onPressed: () {
+                                      formCtrl.setUploadingFile(null);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "File Uploaded",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    uploadingFile!.path.split('/').last,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      // ignore: deprecated_member_use
-                                      color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.close,
-                                      color: Theme.of(context).colorScheme.error, size: 18),
-                                  onPressed: () {
-                                    setState(() {
-                                      uploadingFile = null;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-              SizedBox(height: 36),
+              const SizedBox(height: 36),
               Column(
                 children: [
                   submit(context, isPhone, onPressDoc),
@@ -397,7 +398,6 @@ class _AddPageState extends State<AddPage> {
             child: GestureDetector(
               onTap: () {
                 showBottomSheet1(context, s.width < 600, docDepart);
-                setState(() {});
               },
               child: Icon(
                 Icons.add_circle_outlined,
@@ -412,10 +412,9 @@ class _AddPageState extends State<AddPage> {
   }
 
   Future<void> onPressDoc() async {
-    if (profileImage != null) {
+    final formCtrl = context.read<DoctorFormController>();
+    if (formCtrl.profileImage != null) {
       if (docForm.currentState!.validate()) {
-        final image = profileImage;
-        final uploadfile = uploadingFile;
         final name = docName.text.trim();
         final age = docAge.text.trim();
         final phone = docPhone.text.trim();
@@ -424,6 +423,7 @@ class _AddPageState extends State<AddPage> {
         final years = docExprnce.text.trim();
         final fees = docFees.text.trim();
         final title = titleController.currentState?.value;
+        final formCtrl = context.read<DoctorFormController>();
         final doctors = DoctorModel(
             name: name,
             age: age,
@@ -432,8 +432,8 @@ class _AddPageState extends State<AddPage> {
             department: department,
             years: years,
             fees: fees,
-            imagePath: image!.path,
-            newFilePath: uploadfile!.path,
+            imagePath: formCtrl.profileImage!.path,
+            newFilePath: formCtrl.uploadingFile?.path,
             titleName: title);
         await context.read<DoctorController>().add(doctors);
 
@@ -444,10 +444,8 @@ class _AddPageState extends State<AddPage> {
         docDepart.clear();
         docExprnce.clear();
         docFees.clear();
-        setState(() {
-          profileImage = null;
-        });
-        setState(() {});
+        // ignore: use_build_context_synchronously
+        context.read<DoctorFormController>().clearForm();
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MainPage()));
@@ -481,16 +479,12 @@ class _AddPageState extends State<AddPage> {
                 fileLabel: "Upload File",
                 onPhotoSelected: (File? photo) {
                   if (photo != null) {
-                    setState(() {
-                      profileImage = photo;
-                    });
+                    context.read<DoctorFormController>().setProfileImage(photo);
                   }
                 },
                 onFileSelected: (File? file) {
                   if (file != null) {
-                    setState(() {
-                      profileImage = file;
-                    });
+                    context.read<DoctorFormController>().setProfileImage(file);
                   }
                 },
               );

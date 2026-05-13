@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:arogyamate/controllers/appointment_controller.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:arogyamate/widgets/blood_group_dropdown.dart';
@@ -9,7 +7,6 @@ import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
-
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
@@ -33,7 +30,6 @@ class AppointmentSection extends StatefulWidget {
 }
 
 class _AppointmentSectionState extends State<AppointmentSection> {
-  File? uploadingFile;
   final TextEditingController patientAge = TextEditingController();
   final TextEditingController patientPhone = TextEditingController();
   final TextEditingController patientDocDepart = TextEditingController();
@@ -41,16 +37,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
   final TextEditingController patientAddress = TextEditingController();
   final TextEditingController patientName = TextEditingController();
   final BloodGroupController bloodGroup = BloodGroupController();
-   final genderController = GlobalKey<FormFieldState<String>>();
+  final genderController = GlobalKey<FormFieldState<String>>();
+
   @override
   void initState() {
     super.initState();
-    // Doctors are already loaded via DoctorController in main.dart
-  }
-  void updateFile(File? file) {
-    setState(() {
-      uploadingFile = file;
-    });
   }
 
   @override
@@ -79,14 +70,14 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                     controller: patientName,
                     validator: AppValidators.validateName,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 HeadLine(head: 'Genter'),
                 Row(
                   children: [
                    GenderSelector(genderKey: genderController),
                   ],
                 ),
-                 SizedBox(height: 20),
+                 const SizedBox(height: 20),
                 Row(
                   children: [
                     HeadLine(
@@ -110,7 +101,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Padding(
@@ -121,7 +112,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(width: 13),
+                    const SizedBox(width: 13),
                     BloodGroupDropdown(
                       validator: (value) => value == null || value.isEmpty
                           ? 'Please select a blood group'
@@ -130,21 +121,21 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 HeadLine(head: 'Address'),
                 TextsField(
                     hint: 'Enter Address', 
                     controller: patientAddress,
                     validator: (val) => AppValidators.validateRequired(val, 'Address'),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 HeadLine(head: 'Department'),
                 textFieldWithBottomSheet(
                     isPhone, context, 'Eg:General', patientDocDepart,
                     onBottomSheetTap: () {
                   showBottomSheet1(context, s.width < 600, patientDocDepart);
                 }),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 HeadLine(head: "Doctor's Name"),
                 textFieldWithBottomSheet(
                     isPhone, context, 'Eg:Doctors Name', patientDocName,
@@ -152,7 +143,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                   showBottomSheetDoctor(context, s.width < 600, patientDocName);
                 }),
               
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     SizedBox(
@@ -168,11 +159,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                         )),
                   ],
                 ),
-                SizedBox(height: 36),
+                const SizedBox(height: 36),
                 Column(
                   children: [
                     submit(context, isPhone, onPressAppoinment),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                   ],
                 )
               ],
@@ -256,7 +247,6 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       dateController.clear();
       timeController.clear();
 
-      setState(() {});
       // ignore: use_build_context_synchronously
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => MainPage()));

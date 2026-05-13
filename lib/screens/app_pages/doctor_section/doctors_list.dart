@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctors_timing.dart';
@@ -23,50 +22,9 @@ class DoctorPage extends StatefulWidget {
 
 class _DoctorPageState extends State<DoctorPage> {
   final GlobalKey<FormState> searchin = GlobalKey<FormState>();
-  bool showSearchContainer = false;
-  String? selectedDepartment;
-  String? selectedQualification;
-  int? selectedAge;
-  double? selectedFees;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctrl = context.read<DoctorController>();
-      setState(() {
-        departments = ctrl.doctors
-            .map((d) => d.department ?? '')
-            .where((d) => d.isNotEmpty)
-            .toSet()
-            .toList();
-        qualifications = ctrl.doctors
-            .map((d) => d.qualification ?? '')
-            .where((q) => q.isNotEmpty)
-            .toSet()
-            .toList();
-        ages = ctrl.doctors
-            .map((d) => d.years != null && d.years!.isNotEmpty
-                ? int.tryParse(d.years!)
-                : null)
-            .whereType<int>()
-            .toSet()
-            .toList();
-        fees = ctrl.doctors
-            .map((d) => d.fees != null && d.fees!.isNotEmpty
-                ? double.tryParse(d.fees!)
-                : null)
-            .whereType<double>()
-            .toSet()
-            .toList();
-      });
-    });
-  }
 
-  List<String> departments = [];
-  List<String> qualifications = [];
-  List<int> ages = [];
-  List<double> fees = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +56,7 @@ class _DoctorPageState extends State<DoctorPage> {
                 color: Theme.of(context).colorScheme.primary,
                 size: 28,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 'Doctors',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -112,40 +70,36 @@ class _DoctorPageState extends State<DoctorPage> {
 
         // Search Bar
 
-        CommonSearch(
-          isPhone: true,
-          hint: "Search",
-          controller: searchController,
-          onSearch: (value) => context.read<DoctorController>().search(value),
-          onFilterPressed: () {
-            setState(() {
-              showSearchContainer = !showSearchContainer;
-            });
-          },
-          onClearPressed: () {
-            setState(() {
-              showSearchContainer = false;
-              selectedDepartment = null;
-              selectedAge = null;
-              selectedQualification = null;
-              selectedFees = null;
-            });
-          },
-        ),
-
-        if (showSearchContainer)
-          DoctorSearchFilter(
-            isPhone: isPhone,
-            onFiltersSelected: (department, qualification, age, fees) {
-              setState(() {
-                selectedDepartment = department;
-                selectedQualification = qualification;
-                selectedAge = age;
-                selectedFees = fees;
-              });
-              context.read<DoctorController>().search(searchController.text);
-            },
+        Consumer<DoctorController>(
+          builder: (context, ctrl, _) => Column(
+            children: [
+              CommonSearch(
+                isPhone: true,
+                hint: "Search",
+                controller: searchController,
+                onSearch: (value) => ctrl.search(value),
+                onFilterPressed: () => ctrl.toggleSearchContainer(),
+                onClearPressed: () {
+                  ctrl.setShowSearchContainer(false);
+                  ctrl.clearFilter();
+                },
+              ),
+              if (ctrl.showSearchContainer)
+                DoctorSearchFilter(
+                  isPhone: isPhone,
+                  onFiltersSelected: (department, qualification, age, fees) {
+                    ctrl.setFilterSelections(
+                          department: department,
+                          qualification: qualification,
+                          age: age,
+                          fees: fees,
+                        );
+                    ctrl.search(searchController.text);
+                  },
+                ),
+            ],
           ),
+        ),
 
         const SizedBox(height: 20),
 
@@ -154,16 +108,16 @@ class _DoctorPageState extends State<DoctorPage> {
           child: Consumer<DoctorController>(
             builder: (context, ctrl, _) {
               final filteredDoctors = ctrl.doctors.where((doctor) {
-                bool matchesDepartment = selectedDepartment == null ||
-                    doctor.department == selectedDepartment;
-                bool matchesQualification = selectedQualification == null ||
-                    doctor.qualification == selectedQualification;
-                bool matchesAge = selectedAge == null ||
+                bool matchesDepartment = ctrl.selectedDepartment == null ||
+                    doctor.department == ctrl.selectedDepartment;
+                bool matchesQualification = ctrl.selectedQualification == null ||
+                    doctor.qualification == ctrl.selectedQualification;
+                bool matchesAge = ctrl.selectedAge == null ||
                     (doctor.years != null &&
-                        int.tryParse(doctor.years!) == selectedAge);
-                bool matchesFees = selectedFees == null ||
+                        int.tryParse(doctor.years!) == ctrl.selectedAge);
+                bool matchesFees = ctrl.selectedFees == null ||
                     (doctor.fees != null &&
-                        double.tryParse(doctor.fees!) == selectedFees);
+                        double.tryParse(doctor.fees!) == ctrl.selectedFees);
                 return matchesDepartment &&
                     matchesQualification &&
                     matchesAge &&

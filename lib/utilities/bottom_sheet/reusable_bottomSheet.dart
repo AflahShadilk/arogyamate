@@ -59,7 +59,7 @@ void reusableShowBottomSheet(
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 50,
                   ),
                   isfile == true
@@ -87,7 +87,7 @@ void reusableShowBottomSheet(
                             ],
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   isGallery == true
                       ? GestureDetector(
                           onTap: () async {
@@ -113,7 +113,7 @@ void reusableShowBottomSheet(
                             ],
                           ),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
               const SizedBox(height: 20),

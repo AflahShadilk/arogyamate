@@ -1,6 +1,9 @@
 import 'package:arogyamate/controllers/appointment_controller.dart';
 import 'package:arogyamate/controllers/department_controller.dart';
 import 'package:arogyamate/controllers/doctor_controller.dart';
+import 'package:arogyamate/controllers/doctor_form_controller.dart';
+import 'package:arogyamate/controllers/navigation_controller.dart';
+import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/data/repositories/appointment_repository.dart';
 import 'package:arogyamate/data/repositories/department_repository.dart';
 import 'package:arogyamate/data/repositories/doctor_repository.dart';
@@ -57,6 +60,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => AppointmentController()..loadAll(),
         ),
+        ChangeNotifierProvider(create: (_) => NavigationController()),
+        ChangeNotifierProvider(create: (_) => DoctorFormController()),
+        ChangeNotifierProvider(create: (_) => SessionController()..loadSessionData()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {

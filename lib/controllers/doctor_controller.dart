@@ -8,11 +8,27 @@ class DoctorController extends ChangeNotifier {
   Map<String, List> _filterData = {};
   bool _isLoading = false;
   String? _error;
+  bool _showSearchContainer = false;
 
+  bool get showSearchContainer => _showSearchContainer;
+
+  void toggleSearchContainer() {
+    _showSearchContainer = !_showSearchContainer;
+    notifyListeners();
+  }
+
+  void setShowSearchContainer(bool value) {
+    _showSearchContainer = value;
+    notifyListeners();
+  }
+
+  int _selectedShift = 0;
   String? selectedDepartment;
   String? selectedQualification;
   int? selectedAge;
   double? selectedFees;
+
+  int get selectedShift => _selectedShift;
 
   List<DoctorModel> get doctors => _doctors;
   Map<String, List> get filterData => _filterData;
@@ -113,11 +129,13 @@ class DoctorController extends ChangeNotifier {
     String? qualification,
     int? age,
     double? fees,
+    int? shift,
   }) {
     if (department != null) selectedDepartment = department;
     if (qualification != null) selectedQualification = qualification;
     if (age != null) selectedAge = age;
     if (fees != null) selectedFees = fees;
+    if (shift != null) _selectedShift = shift;
     notifyListeners();
   }
 

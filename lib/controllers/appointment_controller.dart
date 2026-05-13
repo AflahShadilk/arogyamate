@@ -7,6 +7,19 @@ class AppointmentController extends ChangeNotifier {
   List<AppointModel> _all = [];
   bool _isLoading = false;
   String? _error;
+  bool _showSearchContainer = false;
+
+  bool get showSearchContainer => _showSearchContainer;
+
+  void toggleSearchContainer() {
+    _showSearchContainer = !_showSearchContainer;
+    notifyListeners();
+  }
+
+  void setShowSearchContainer(bool value) {
+    _showSearchContainer = value;
+    notifyListeners();
+  }
 
   String? selectedDepartment;
   String? selectedDoctor;

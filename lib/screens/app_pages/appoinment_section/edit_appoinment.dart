@@ -1,6 +1,5 @@
 import 'package:arogyamate/controllers/appointment_controller.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
-
 import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
@@ -126,7 +125,7 @@ class _EditAppointment extends State<EditAppoinment>
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(width: 13),
+                  const SizedBox(width: 13),
                   BloodGroupDropdown(
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please select a blood group'
