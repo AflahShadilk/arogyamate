@@ -111,8 +111,12 @@ class _DoctorViewState extends State<DoctorView> {
       if (confirm != true) return;
     }
 
+    if (!mounted) return;
+    final doctorCtrl = context.read<DoctorController>();
+    final notificationCtrl = context.read<NotificationController>();
+
     // Update Status & Dates in DB
-    await context.read<DoctorController>().setStatus(
+    await doctorCtrl.setStatus(
           doctor,
           status: Constants.leave,
           leaveDate: startStr,
@@ -120,12 +124,13 @@ class _DoctorViewState extends State<DoctorView> {
         );
 
     // Save local notification
-    await context.read<NotificationController>().addNotification(
+    await notificationCtrl.addNotification(
           title: 'Doctor On Leave',
           body: 'Dr. ${doctor.name} is on leave from $startStr to $endStr.',
           type: 'doctor_leave',
         );
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Leave scheduled for Dr. ${doctor.name}'),

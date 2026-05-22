@@ -96,7 +96,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                       value: formCtrl.status.isEmpty ? null : formCtrl.status,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.surfaceVariant ?? Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,

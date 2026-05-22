@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'dart:math' as math;
 import 'package:arogyamate/controllers/doctor_controller.dart';
-import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/analytics/analytics_screen.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/doctor_details.dart';
@@ -9,7 +7,6 @@ import 'package:arogyamate/screens/app_pages/notifications/notifications_screen.
 import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/search_item/deparment_searchFilter.dart';
 import 'package:arogyamate/widgets/widgets.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +37,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: LayoutBuilder(builder: (context, constraints) {
         bool isPhone = constraints.maxWidth < 600;
-        Size s = MediaQuery.of(context).size;
         return SafeArea(
           child: GestureDetector(
             onHorizontalDragEnd: (details) {

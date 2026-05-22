@@ -177,10 +177,10 @@ class _AccountPageState extends State<AccountPage> {
           child: CircleAvatar(
             radius: 60,
             backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-            backgroundImage: (image != null && image!.isNotEmpty)
-                ? (kIsWeb ? NetworkImage(image!) as ImageProvider : FileImage(File(image!)))
+            backgroundImage: (image != null && image.isNotEmpty)
+                ? (kIsWeb ? NetworkImage(image) as ImageProvider : FileImage(File(image)))
                 : const AssetImage('assets/images/hospital.jpg') as ImageProvider,
-            child: (image == null || image!.isEmpty)
+            child: (image == null || image.isEmpty)
                 ? Icon(Icons.local_hospital_rounded, size: 45, color: Theme.of(context).colorScheme.primary)
                 : const SizedBox(),
           ),
