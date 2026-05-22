@@ -5,12 +5,15 @@ import 'package:arogyamate/controllers/doctor_form_controller.dart';
 import 'package:arogyamate/controllers/navigation_controller.dart';
 import 'package:arogyamate/controllers/session_controller.dart';
 import 'package:arogyamate/controllers/analytics_controller.dart';
+import 'package:arogyamate/controllers/notification_controller.dart';
 import 'package:arogyamate/data/repositories/appointment_repository.dart';
 import 'package:arogyamate/data/repositories/department_repository.dart';
 import 'package:arogyamate/data/repositories/doctor_repository.dart';
+import 'package:arogyamate/data/repositories/notification_repository.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/department_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
+import 'package:arogyamate/data_base/models/notification_model.dart';
 import 'package:arogyamate/screens/login_info/splash_screen.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/core/theme/app_theme.dart';
@@ -33,11 +36,15 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(AppointModelAdapter().typeId)) {
     Hive.registerAdapter(AppointModelAdapter());
   }
+  if (!Hive.isAdapterRegistered(NotificationModelAdapter().typeId)) {
+    Hive.registerAdapter(NotificationModelAdapter());
+  }
 
   // Open all Hive boxes once — repositories reuse these open boxes
   await DepartmentRepository.init();
   await DoctorRepository.init();
   await AppointmentRepository.init();
+  await NotificationRepository.init();
 
   runApp(const MyApp());
 }
@@ -58,6 +65,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AppointmentController()..loadAll(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NotificationController()..loadAll(),
         ),
         ChangeNotifierProvider(create: (_) => NavigationController()),
         ChangeNotifierProvider(create: (_) => DoctorFormController()),

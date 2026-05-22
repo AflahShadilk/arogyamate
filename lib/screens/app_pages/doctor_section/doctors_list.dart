@@ -1,20 +1,18 @@
-import 'dart:io';
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
-import 'package:arogyamate/screens/app_pages/doctor_section/doctors_timing.dart';
-import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
+import 'package:arogyamate/screens/app_pages/doctor_section/doctor_details.dart';
+import 'package:arogyamate/screens/app_pages/doctor_section/add_doctor.dart';
 import 'package:arogyamate/utilities/search_item/deparment_searchFilter.dart';
-import 'package:arogyamate/utilities/search_item/searchbar_doctor.dart';
-import 'package:flutter/foundation.dart';
+import 'package:arogyamate/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 final TextEditingController searchController = TextEditingController();
 
-// ignore: must_be_immutable
 class DoctorPage extends StatefulWidget {
-  DoctorModel? doctor;
-  DoctorPage({super.key, this.doctor});
+  final DoctorModel? doctor;
+  const DoctorPage({super.key, this.doctor});
 
   @override
   State<DoctorPage> createState() => _DoctorPageState();
@@ -23,19 +21,40 @@ class DoctorPage extends StatefulWidget {
 class _DoctorPageState extends State<DoctorPage> {
   final GlobalKey<FormState> searchin = GlobalKey<FormState>();
 
-
-
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      body: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: doctorsList(context),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          'Doctors',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
+        ),
+        elevation: 0,
+        backgroundColor: theme.cardColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_rounded, size: 28),
+            tooltip: 'Add Doctor',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddDoctorScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: doctorsList(context),
         ),
       ),
     );
@@ -46,36 +65,13 @@ class _DoctorPageState extends State<DoctorPage> {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.medical_services_rounded,
-                color: Theme.of(context).colorScheme.primary,
-                size: 28,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                'Doctors',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ],
-          ),
-        ),
-
+        const SizedBox(height: 12),
         // Search Bar
-
         Consumer<DoctorController>(
           builder: (context, ctrl, _) => Column(
             children: [
-              CommonSearch(
-                isPhone: true,
-                hint: "Search",
+              ModernSearchBar(
+                hint: "Search specialists...",
                 controller: searchController,
                 onSearch: (value) => ctrl.search(value),
                 onFilterPressed: () => ctrl.toggleSearchContainer(),
@@ -85,23 +81,26 @@ class _DoctorPageState extends State<DoctorPage> {
                 },
               ),
               if (ctrl.showSearchContainer)
-                DoctorSearchFilter(
-                  isPhone: isPhone,
-                  onFiltersSelected: (department, qualification, age, fees) {
-                    ctrl.setFilterSelections(
-                          department: department,
-                          qualification: qualification,
-                          age: age,
-                          fees: fees,
-                        );
-                    ctrl.search(searchController.text);
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: DoctorSearchFilter(
+                    isPhone: isPhone,
+                    onFiltersSelected: (department, qualification, age, fees) {
+                      ctrl.setFilterSelections(
+                        department: department,
+                        qualification: qualification,
+                        age: age,
+                        fees: fees,
+                      );
+                      ctrl.search(searchController.text);
+                    },
+                  ),
                 ),
             ],
           ),
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
 
         // Doctor List
         Expanded(
@@ -123,11 +122,33 @@ class _DoctorPageState extends State<DoctorPage> {
                     matchesAge &&
                     matchesFees;
               }).toList();
+
+              if (filteredDoctors.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No doctors found.',
+                    style: GoogleFonts.poppins(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+                  ),
+                );
+              }
+
               return ListView.builder(
+                physics: const BouncingScrollPhysics(),
                 itemCount: filteredDoctors.length,
                 itemBuilder: (context, index) {
                   final data = filteredDoctors[index];
-                  return _buildDoctorCard(context, data);
+                  return DoctorCard(
+                    doctor: data,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DoctorView(doctor: data),
+                        ),
+                      );
+                    },
+                  );
                 },
               );
             },
@@ -136,155 +157,5 @@ class _DoctorPageState extends State<DoctorPage> {
       ],
     );
   }
-
-  Widget _buildDoctorCard(BuildContext context, DoctorModel data) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor,
-            blurRadius: 3,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // Doctor Image
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Theme.of(context).colorScheme.surface, width: 3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).shadowColor.withOpacity(0.2),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: (data.imagePath?.isNotEmpty ?? false)
-                        ? kIsWeb
-                            ? Image.network(data.imagePath!)
-                            : Image.file(File(data.imagePath!), fit: BoxFit.cover)
-                        : Image.asset('assets/images/men.jpg', fit: BoxFit.cover),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Doctor Information
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            data.titleName ?? '',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w300),
-                          ),
-                          Text(
-                            data.name ?? 'Unknown Doctor',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      _detailRow(context, Icons.school_outlined,
-                          data.qualification ?? 'No qualification'),
-                      const SizedBox(height: 4),
-                      _detailRow(context, Icons.medical_services_outlined,
-                          data.department ?? 'No department'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Bottom action bar
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EditDoctor(doctor: data)));
-                  },
-                  icon: Icon(Icons.edit_outlined,
-                      color: Theme.of(context).colorScheme.primary, size: 20),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TimingDoctor(doctor: data)));
-                  },
-                  icon: Icon(Icons.calendar_today_outlined,
-                      color: Theme.of(context).colorScheme.onPrimary, size: 16),
-                  label: Text('Schedule',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
-                    elevation: 5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _detailRow(BuildContext context, IconData icon, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
+}
 }

@@ -139,6 +139,11 @@ class DoctorController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setSelectedDepartment(String? dept) {
+    selectedDepartment = dept;
+    notifyListeners();
+  }
+
   Future<void> setShift(
     DoctorModel model, {
     required String? status,
