@@ -29,13 +29,14 @@ class AppointModelAdapter extends TypeAdapter<AppointModel> {
       time: fields[9] as String?,
       filePath: fields[10] as String?,
       title: fields[11] as String?,
+      status: fields[12] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppointModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class AppointModelAdapter extends TypeAdapter<AppointModel> {
       ..writeByte(10)
       ..write(obj.filePath)
       ..writeByte(11)
-      ..write(obj.title);
+      ..write(obj.title)
+      ..writeByte(12)
+      ..write(obj.status);
   }
 
   @override

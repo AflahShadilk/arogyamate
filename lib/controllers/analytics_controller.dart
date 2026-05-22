@@ -8,11 +8,13 @@ class AnalyticsController extends ChangeNotifier {
 
   int _totalAppointments = 0;
   int _totalDoctors = 0;
+  String? _topDoctor;
   Map<String, int> _appointmentsByDepartment = {};
   Map<String, int> _appointmentsByDay = {};
 
   int get totalAppointments => _totalAppointments;
   int get totalDoctors => _totalDoctors;
+  String? get topDoctor => _topDoctor;
   Map<String, int> get appointmentsByDepartment => _appointmentsByDepartment;
   Map<String, int> get appointmentsByDay => _appointmentsByDay;
 
@@ -26,6 +28,19 @@ class AnalyticsController extends ChangeNotifier {
 
       _totalAppointments = appointments.length;
       _totalDoctors = doctors.length;
+
+      // Find top doctor by appointment count
+      final Map<String, int> doctorCount = {};
+      for (var app in appointments) {
+        if (app.doctorName != null) {
+          doctorCount[app.doctorName!] = (doctorCount[app.doctorName!] ?? 0) + 1;
+        }
+      }
+      if (doctorCount.isNotEmpty) {
+        _topDoctor = doctorCount.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
+      } else {
+        _topDoctor = null;
+      }
 
       // Group by Department
       _appointmentsByDepartment = {};

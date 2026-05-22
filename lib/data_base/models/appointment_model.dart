@@ -27,6 +27,9 @@ class AppointModel extends HiveObject{
   String ?filePath;
   @HiveField(11)
   String ?title;
+  @HiveField(12)
+  String? status;
+
   AppointModel(
       {this.id,
       required this.name,
@@ -39,5 +42,6 @@ class AppointModel extends HiveObject{
       required this.date,
       required this.time,
       this.filePath,
-      this.title});
+      this.title,
+      this.status = 'Upcoming'});
 }

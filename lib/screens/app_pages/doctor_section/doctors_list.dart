@@ -43,7 +43,7 @@ class _DoctorPageState extends State<DoctorPage> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AddDoctorScreen(),
+                  builder: (context) => AddPage(),
                 ),
               );
             },
@@ -157,5 +157,4 @@ class _DoctorPageState extends State<DoctorPage> {
       ],
     );
   }
-}
 }

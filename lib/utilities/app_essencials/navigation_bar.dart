@@ -7,7 +7,6 @@ import 'package:arogyamate/widgets/common/in_app_toast_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -39,7 +38,7 @@ class _MainPageState extends State<MainPage> {
           ),
           bottomNavigationBar: SafeArea(
             child: Container(
-              margin: const EdgeInsets.only(horizontal: 16, bottom: 12, top: 4),
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12, top: 4),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(24),
