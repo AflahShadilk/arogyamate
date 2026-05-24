@@ -1,12 +1,13 @@
-import 'package:arogyamate/controllers/appointment_controller.dart';
-import 'package:arogyamate/data_base/models/notification_model.dart';
-import 'package:arogyamate/data/repositories/notification_repository.dart';
-import 'package:arogyamate/services/notification_service.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
-import 'package:arogyamate/widgets/blood_group_dropdown.dart';
+import 'package:provider/provider.dart';
+import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:arogyamate/data/repositories/notification_repository.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
+import 'package:arogyamate/data_base/models/notification_model.dart';
+import 'package:arogyamate/services/notification_service.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
@@ -15,10 +16,9 @@ import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/utilities/date_time/date_time.dart';
 import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
+import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:arogyamate/utilities/validators/app_validators.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 
 /// Standalone screen that wraps [AppointmentSection] in its own Scaffold
 /// with a proper AppBar and back button.
