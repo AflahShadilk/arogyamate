@@ -14,6 +14,7 @@ import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/department_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/data_base/models/notification_model.dart';
+import 'package:arogyamate/services/notification_service.dart';
 import 'package:arogyamate/screens/login_info/splash_screen.dart';
 import 'package:arogyamate/utilities/constant/media_query.dart';
 import 'package:arogyamate/core/theme/app_theme.dart';
@@ -45,6 +46,8 @@ Future<void> main() async {
   await DoctorRepository.init();
   await AppointmentRepository.init();
   await NotificationRepository.init();
+
+  await NotificationService().init();
 
   runApp(const MyApp());
 }

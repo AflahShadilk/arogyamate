@@ -36,19 +36,8 @@ class _DoctorPageState extends State<DoctorPage> {
         ),
         elevation: 0,
         backgroundColor: theme.cardColor,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded, size: 28),
-            tooltip: 'Add Doctor',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AddPage(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 8),
+        actions: const [
+          SizedBox(width: 8),
         ],
       ),
       body: SafeArea(
@@ -56,6 +45,19 @@ class _DoctorPageState extends State<DoctorPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: doctorsList(context),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddDoctorScreen(),
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Add Doctor', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }

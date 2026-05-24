@@ -6,6 +6,7 @@ import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
+import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +31,7 @@ class _EditDoctorState extends State<EditDoctor>
   final TextEditingController department = TextEditingController();
   final TextEditingController experience = TextEditingController();
   final TextEditingController fees = TextEditingController();
+  String? _selectedShift;
 
 
   late AnimationController _animationController;
@@ -56,7 +58,17 @@ class _EditDoctorState extends State<EditDoctor>
       department.text = widget.doctor?.department ?? '';
       experience.text = widget.doctor?.years ?? '';
       fees.text = widget.doctor?.fees ?? '';
-      
+
+      // Pre-populate shift dropdown from existing doctor status
+      final existingStatus = widget.doctor?.status;
+      if (existingStatus == Constants.fullday) {
+        _selectedShift = 'Full Day';
+      } else if (existingStatus == Constants.halfday) {
+        _selectedShift = 'Half Day';
+      } else if (existingStatus == Constants.nightshift) {
+        _selectedShift = 'Night Shift';
+      }
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<DoctorFormController>().setUpdateImagePath(widget.doctor?.imagePath);
       });
@@ -201,8 +213,7 @@ class _EditDoctorState extends State<EditDoctor>
                         ),
                         const SizedBox(height: 20),
                         editField(
-                            isPhone,
-                            'Experience',
+                            isPhone, 'Experience',
                             "Enter Experience",
                             experience,
                             AppValidators.validateExperience,
@@ -210,6 +221,43 @@ class _EditDoctorState extends State<EditDoctor>
                         const SizedBox(height: 20),
                         editField(isPhone, 'Fees', "Enter Fees", fees,
                             AppValidators.validateFees, TextInputType.number),
+                        const SizedBox(height: 20),
+                        // ── Duty Shift Selector ──────────────────────────────
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Duty Shift',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              isExpanded: true,
+                              value: _selectedShift,
+                              decoration: InputDecoration(
+                                hintText: 'Select Duty Shift',
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(value: 'Full Day', child: Text('Full Day (10:00 AM - 06:00 PM)')),
+                                DropdownMenuItem(value: 'Half Day', child: Text('Half Day (12:00 PM - 06:00 PM)')),
+                                DropdownMenuItem(value: 'Night Shift', child: Text('Night Shift (05:00 PM - 06:00 AM)')),
+                              ],
+                              onChanged: (val) {
+                                setState(() {
+                                  _selectedShift = val;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: pressMe,
@@ -315,6 +363,25 @@ class _EditDoctorState extends State<EditDoctor>
       final formCtrl = context.read<DoctorFormController>();
       final images = formCtrl.updateImagePath;
 
+      // Map selected shift back to status and timings
+      String? status = widget.doctor?.status;
+      String? startTime = widget.doctor?.startTime;
+      String? endTime = widget.doctor?.endtime;
+
+      if (_selectedShift == 'Full Day') {
+        status = Constants.fullday;
+        startTime = Constants.fulldatTime[0];
+        endTime = Constants.fulldatTime[1];
+      } else if (_selectedShift == 'Half Day') {
+        status = Constants.halfday;
+        startTime = Constants.halfdayTime[0];
+        endTime = Constants.halfdayTime[1];
+      } else if (_selectedShift == 'Night Shift') {
+        status = Constants.nightshift;
+        startTime = Constants.nightshiftTime[0];
+        endTime = Constants.nightshiftTime[1];
+      }
+
       final updateDetails = DoctorModel(
           id: widget.doctor?.id,
           name: names,
@@ -324,7 +391,14 @@ class _EditDoctorState extends State<EditDoctor>
           department: departments,
           years: exprnce,
           fees: feeses,
-          imagePath: images);
+          imagePath: images,
+          status: status,
+          startTime: startTime,
+          endtime: endTime,
+          leaveDate: widget.doctor?.leaveDate,
+          endLeaveDate: widget.doctor?.endLeaveDate,
+          newFilePath: widget.doctor?.newFilePath,
+          titleName: widget.doctor?.titleName);
       await context.read<DoctorController>().update(updateDetails);
 
       // Clear fields

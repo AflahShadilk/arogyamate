@@ -1,10 +1,13 @@
 import 'package:arogyamate/controllers/appointment_controller.dart';
+import 'package:arogyamate/data_base/models/notification_model.dart';
+import 'package:arogyamate/data/repositories/notification_repository.dart';
+import 'package:arogyamate/services/notification_service.dart';
+import 'package:intl/intl.dart';
 import 'package:arogyamate/utilities/text_numberFields/text_field.dart';
 import 'package:arogyamate/widgets/blood_group_dropdown.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
-import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
@@ -14,7 +17,38 @@ import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
 import 'package:arogyamate/utilities/text_numberFields/number_field.dart';
 import 'package:arogyamate/utilities/validators/app_validators.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+/// Standalone screen that wraps [AppointmentSection] in its own Scaffold
+/// with a proper AppBar and back button.
+class AddAppointmentScreen extends StatelessWidget {
+  final DoctorModel? doctor;
+  const AddAppointmentScreen({super.key, this.doctor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          'Book Appointment',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Theme.of(context).cardColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: AppointmentSection(doctor: doctor),
+    );
+  }
+}
 
 // ignore: must_be_immutable
 class AppointmentSection extends StatefulWidget {
@@ -58,10 +92,11 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       
        Padding(
         padding: EdgeInsets.symmetric(horizontal: isPhone?6:80),
-        child: Form(
-            key: appoinmentForm,
-            child: Column(
-              children: [
+        child: SingleChildScrollView(
+          child: Form(
+              key: appoinmentForm,
+              child: Column(
+                children: [
                 HeadLine(
                   head: 'Name',
                 ),
@@ -140,7 +175,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 textFieldWithBottomSheet(
                     isPhone, context, 'Eg:Doctors Name', patientDocName,
                     onBottomSheetTap: () {
-                  showBottomSheetDoctor(context, s.width < 600, patientDocName);
+                  showBottomSheetDoctor(context, s.width < 600, patientDocName, selectedDepartment: patientDocDepart.text.trim());
                 }),
               
                 const SizedBox(height: 20),
@@ -168,6 +203,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
                 )
               ],
             )),
+        ),
       );
       },
     );
@@ -237,6 +273,30 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       );
       await context.read<AppointmentController>().add(appointments);
 
+      // Save notification to Hive
+      final notification = NotificationModel(
+        title: 'Appointment Booked',
+        body: 'Your appointment with $docName is confirmed on $date at $time.',
+        dateTime: DateTime.now(),
+        type: 'appointment_booked',
+      );
+      await NotificationRepository.add(notification);
+
+      // Schedule local system notification
+      try {
+        final DateFormat dateFormat = DateFormat("d-M-yyyy h:mm a");
+        final DateTime scheduledDate = dateFormat.parse("$date $time");
+        
+        await NotificationService().scheduleNotification(
+          id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
+          title: 'Appointment Reminder',
+          body: 'It is time for your appointment with $docName!',
+          scheduledDate: scheduledDate,
+        );
+      } catch (e) {
+        debugPrint('Error scheduling notification: $e');
+      }
+
       patientName.clear();
       patientAge.clear();
       patientPhone.clear();
@@ -248,8 +308,7 @@ class _AppointmentSectionState extends State<AppointmentSection> {
       timeController.clear();
 
       // ignore: use_build_context_synchronously
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => MainPage()));
+      Navigator.of(context).pop();
     }
   }
 }

@@ -230,7 +230,7 @@ class _EditAppointment extends State<EditAppoinment>
                     if (key == department) {
                       showBottomSheet1(context, MediaQuery.of(context).size.width < 600, department);
                     } else if (key == doctor) {
-                      showBottomSheetDoctor(context, s.width < 600,doctor );
+                      showBottomSheetDoctor(context, s.width < 600, doctor, selectedDepartment: department.text.trim());
                     }
                     setState(() {});
                   },

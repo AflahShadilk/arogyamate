@@ -87,19 +87,8 @@ class _RecieptPageState extends State<RecieptPage>
         ),
         backgroundColor: theme.cardColor,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded, size: 28),
-            tooltip: 'New Appointment',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AppointmentSection(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 8),
+        actions: const [
+          SizedBox(width: 8),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -180,6 +169,19 @@ class _RecieptPageState extends State<RecieptPage>
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddAppointmentScreen(),
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Add Appointment', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -304,29 +306,30 @@ class _RecieptPageState extends State<RecieptPage>
             child: Row(
               children: [
                 // Status Change
-                PopupMenuButton<String>(
-                  tooltip: 'Change status',
-                  icon: Icon(Icons.more_horiz_rounded,
-                      size: 20, color: theme.colorScheme.primary),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  onSelected: (newStatus) async {
-                    data.status = newStatus;
-                    await ctrl.update(data);
-                    setState(() {});
-                  },
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(
-                        value: 'Upcoming',
-                        child: Text('Mark Upcoming')),
-                    const PopupMenuItem(
-                        value: 'Completed',
-                        child: Text('Mark Completed')),
-                    const PopupMenuItem(
-                        value: 'Cancelled',
-                        child: Text('Mark Cancelled')),
-                  ],
-                ),
+                if (data.status != 'Completed' && data.status != 'Cancelled')
+                  PopupMenuButton<String>(
+                    tooltip: 'Change status',
+                    icon: Icon(Icons.more_horiz_rounded,
+                        size: 20, color: theme.colorScheme.primary),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    onSelected: (newStatus) async {
+                      data.status = newStatus;
+                      await ctrl.update(data);
+                      setState(() {});
+                    },
+                    itemBuilder: (_) => [
+                      const PopupMenuItem(
+                          value: 'Upcoming',
+                          child: Text('Mark Upcoming')),
+                      const PopupMenuItem(
+                          value: 'Completed',
+                          child: Text('Mark Completed')),
+                      const PopupMenuItem(
+                          value: 'Cancelled',
+                          child: Text('Mark Cancelled')),
+                    ],
+                  ),
                 const Spacer(),
                 // PDF
                 Consumer<SessionController>(

@@ -6,6 +6,7 @@ import 'package:arogyamate/controllers/notification_controller.dart';
 import 'package:arogyamate/data_base/models/appointment_model.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/edit_doctor.dart';
+import 'package:arogyamate/screens/app_pages/doctor_section/doctors_timing.dart';
 import 'package:arogyamate/screens/app_pages/doctor_section/pdfviewer.dart';
 import 'package:arogyamate/utilities/app_essencials/app_Bar.dart';
 import 'package:arogyamate/utilities/constant/constants.dart';
@@ -611,40 +612,63 @@ class _DoctorViewState extends State<DoctorView> {
   }
 
   Widget _buildActionButtons(DoctorModel doctor) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  if (doctor.newFilePath != null && doctor.newFilePath!.isNotEmpty) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PdfViewer(filePath: doctor.newFilePath!),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('No certificate uploaded for this doctor')),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.description_outlined, size: 20),
+                label: const Text('Certificates'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                  side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () => _showSetLeaveDialog(context),
+                icon: const Icon(Icons.beach_access_rounded, size: 20),
+                label: const Text('Set On Leave'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red.shade600,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
           child: OutlinedButton.icon(
             onPressed: () {
-              if (doctor.newFilePath != null && doctor.newFilePath!.isNotEmpty) {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PdfViewer(filePath: doctor.newFilePath!),
-                ));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('No certificate uploaded for this doctor')),
-                );
-              }
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => TimingDoctor(doctor: doctor),
+              ));
             },
-            icon: const Icon(Icons.description_outlined, size: 20),
-            label: const Text('Certificates'),
+            icon: const Icon(Icons.access_time_rounded, size: 20),
+            label: const Text('Manage Shift / Schedule'),
             style: OutlinedButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.primary,
               side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => _showSetLeaveDialog(context),
-            icon: const Icon(Icons.beach_access_rounded, size: 20),
-            label: const Text('Set On Leave'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade600,
-              foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),

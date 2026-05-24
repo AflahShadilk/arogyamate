@@ -19,7 +19,8 @@ class PillToggleSwitch extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final itemWidth = constraints.maxWidth / labels.length;
+        // Subtract 8 to account for the EdgeInsets.all(4) padding on left and right
+        final itemWidth = (constraints.maxWidth - 8) / labels.length;
 
         return GestureDetector(
           onHorizontalDragEnd: (details) {

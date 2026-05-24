@@ -28,14 +28,6 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
     super.initState();
   }
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     Size s = MediaQuery.of(context).size;
@@ -67,12 +59,9 @@ class _AccountPageState extends State<AccountPage> {
                   children: [
                     const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                        ),
+                        
                         const ThemeToggleButton(),
                       ],
                     ),

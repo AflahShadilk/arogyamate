@@ -26,6 +26,28 @@ class _TimingDoctorState extends State<TimingDoctor> {
   TextEditingController enddateController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Pre-populate DoctorFormController with the doctor's existing timing info
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.doctor != null && mounted) {
+        final doc = widget.doctor!;
+        final status = doc.status ?? '';
+        final startTime = doc.startTime ?? '';
+        final endTime = doc.endtime ?? '';
+        context.read<DoctorFormController>().setSchedule(
+          status: status,
+          startTime: startTime,
+          endTime: endTime,
+        );
+        // Pre-fill leave dates if doctor is on leave
+        if (doc.leaveDate != null) dateController.text = doc.leaveDate!;
+        if (doc.endLeaveDate != null) enddateController.text = doc.endLeaveDate!;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isPhone = MediaQuery.of(context).size.width < 600;
     return Scaffold(
@@ -93,6 +115,7 @@ class _TimingDoctorState extends State<TimingDoctor> {
                   padding: const EdgeInsets.all(16.0),
                   child: Consumer<DoctorFormController>(
                     builder: (context, formCtrl, _) => DropdownButtonFormField<String>(
+                      isExpanded: true,
                       value: formCtrl.status.isEmpty ? null : formCtrl.status,
                       decoration: InputDecoration(
                         filled: true,

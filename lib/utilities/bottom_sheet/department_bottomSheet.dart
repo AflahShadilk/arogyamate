@@ -129,7 +129,7 @@ void showBottomSheet1(
 
 //--------------------------------------------------------------------------sheet two
 void showBottomSheetDoctor(
-    BuildContext context, bool isphone, TextEditingController control) {
+    BuildContext context, bool isphone, TextEditingController control, {String? selectedDepartment}) {
   bool isPhone = s.width < 600;
   showModalBottomSheet(
     isScrollControlled: true,
@@ -174,7 +174,12 @@ void showBottomSheetDoctor(
                   ),
                   child: Consumer<DoctorController>(
                     builder: (context, doctorCtrl, _) {
-                      return doctorCtrl.doctors.isEmpty
+                      final filteredDoctors = doctorCtrl.doctors.where((d) => 
+                        selectedDepartment == null || 
+                        selectedDepartment.isEmpty || 
+                        d.department == selectedDepartment).toList();
+
+                      return filteredDoctors.isEmpty
                           ? Center(
                               child: Text(
                                 'No Doctor Found!',
@@ -187,7 +192,7 @@ void showBottomSheetDoctor(
                           : ListView.separated(
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, int index) {
-                                final data = doctorCtrl.doctors[index];
+                                final data = filteredDoctors[index];
                                 return GestureDetector(
                                   onTap: () {
                                     control.text = data.name!;
@@ -212,7 +217,7 @@ void showBottomSheetDoctor(
                               },
                               separatorBuilder: (context, index) =>
                                   const Divider(),
-                              itemCount: doctorCtrl.doctors.length,
+                              itemCount: filteredDoctors.length,
                             );
                     },
                   ),

@@ -2,18 +2,13 @@
 import 'dart:io';
 import 'package:arogyamate/controllers/doctor_controller.dart';
 import 'package:arogyamate/controllers/doctor_form_controller.dart';
-import 'package:arogyamate/controllers/navigation_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:arogyamate/data_base/models/doctor_model.dart';
-
-import 'package:arogyamate/screens/app_pages/appoinment_section/add_appoinment.dart';
 import 'package:arogyamate/utilities/Field_item/field_headings.dart';
-import 'package:arogyamate/utilities/app_essencials/navigation_bar.dart';
-import 'package:arogyamate/utilities/app_essencials/toggles.dart';
 import 'package:arogyamate/utilities/bottom_sheet/department_bottomSheet.dart';
 import 'package:arogyamate/utilities/bottom_sheet/reusable_bottomSheet.dart';
 import 'package:arogyamate/utilities/buttons/submitbutton_addingfield.dart';
-
+import 'package:arogyamate/utilities/constant/constants.dart';
 import 'package:arogyamate/utilities/constant/global_key.dart';
 import 'package:arogyamate/utilities/image_filesPicker/file_uploader.dart';
 import 'package:arogyamate/utilities/text_numberFields/genter_selector.dart';
@@ -26,15 +21,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 
-class AddPage extends StatefulWidget {
+class AddDoctorScreen extends StatefulWidget {
   DoctorModel? doctor;
-  AddPage({super.key, this.doctor});
+  AddDoctorScreen({super.key, this.doctor});
 
   @override
-  State<AddPage> createState() => _AddPageState();
+  State<AddDoctorScreen> createState() => _AddDoctorScreenState();
 }
 
-class _AddPageState extends State<AddPage> {
+class _AddDoctorScreenState extends State<AddDoctorScreen> {
 
   final TextEditingController genter = TextEditingController();
   final TextEditingController docName = TextEditingController();
@@ -45,83 +40,37 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController docDepart = TextEditingController();
   final TextEditingController docFees = TextEditingController();
   final titleController = GlobalKey<FormFieldState<String>>();
+  String? _selectedShift;
   //---------------------------------------------------------------------------------
-
-  void _handleToggle(int index) {
-    context.read<NavigationController>().setAddSectionIndex(index);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: LayoutBuilder(builder: (context, Constraints) {
-        bool isPhone = Constraints.maxWidth < 600;
+      appBar: AppBar(
+        title: Text(
+          'Add Doctor',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Theme.of(context).cardColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        bool isPhone = constraints.maxWidth < 600;
 
-        return SafeArea(
-          child: GestureDetector(
-            onHorizontalDragEnd: (details) {
-              if (details.primaryVelocity! < 0) {
-                _handleToggle(1);
-              } else if (details.primaryVelocity! > 0) {
-                _handleToggle(0);
-              }
-            },
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: isPhone ? 14 : 24, vertical: isPhone ? 12 : 24),
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        Consumer<NavigationController>(
-                          builder: (context, navCtrl, _) => AppToggle(
-                            firstOne: 'Appoinment',
-                            secondOne: 'Add Doctor',
-                            selectedIndex: navCtrl.addSectionIndex,
-                            onToggle: _handleToggle,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Expanded(
-                        child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 500),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0.2, 0.0),
-                              end: const Offset(0.0, 0.0),
-                            ).animate(animation),
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Consumer<NavigationController>(
-                        builder: (context, navCtrl, _) => SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: Column(children: [
-                            if (navCtrl.addSectionIndex == 0) AppointmentSection(),
-                            if (navCtrl.addSectionIndex == 1)
-                              DoctorDetails(isPhone, context)
-                          ]),
-                        ),
-                      ),
-                    ))
-                  ],
-                ),
-              ),
-            ),
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: isPhone ? 14 : 24, vertical: 16),
+            child: DoctorDetails(isPhone, context),
           ),
         );
       }),
@@ -296,6 +245,32 @@ class _AddPageState extends State<AddPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              HeadLine(head: "Duty Shift"),
+              DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _selectedShift,
+                decoration: InputDecoration(
+                  hintText: 'Select Duty Shift',
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please select a duty shift'
+                    : null,
+                items: const [
+                  DropdownMenuItem(value: 'Full Day', child: Text('Full Day (10:00 AM - 06:00 PM)')),
+                  DropdownMenuItem(value: 'Half Day', child: Text('Half Day (12:00 PM - 06:00 PM)')),
+                  DropdownMenuItem(value: 'Night Shift', child: Text('Night Shift (05:00 PM - 06:00 AM)')),
+                ],
+                onChanged: (val) {
+                  setState(() {
+                    _selectedShift = val;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
               HeadLine(head: 'Upload Document'),
               Consumer<DoctorFormController>(
                 builder: (context, formCtrl, _) => Row(
@@ -422,7 +397,25 @@ class _AddPageState extends State<AddPage> {
         final years = docExprnce.text.trim();
         final fees = docFees.text.trim();
         final title = titleController.currentState?.value;
-        final formCtrl = context.read<DoctorFormController>();
+
+        String? status;
+        String? startTime;
+        String? endTime;
+
+        if (_selectedShift == 'Full Day') {
+          status = Constants.fullday;
+          startTime = Constants.fulldatTime[0];
+          endTime = Constants.fulldatTime[1];
+        } else if (_selectedShift == 'Half Day') {
+          status = Constants.halfday;
+          startTime = Constants.halfdayTime[0];
+          endTime = Constants.halfdayTime[1];
+        } else if (_selectedShift == 'Night Shift') {
+          status = Constants.nightshift;
+          startTime = Constants.nightshiftTime[0];
+          endTime = Constants.nightshiftTime[1];
+        }
+
         final doctors = DoctorModel(
             name: name,
             age: age,
@@ -433,7 +426,10 @@ class _AddPageState extends State<AddPage> {
             fees: fees,
             imagePath: formCtrl.profileImage!.path,
             newFilePath: formCtrl.uploadingFile?.path,
-            titleName: title);
+            titleName: title,
+            status: status,
+            startTime: startTime,
+            endtime: endTime);
         await context.read<DoctorController>().add(doctors);
 
         docName.clear();
@@ -446,8 +442,7 @@ class _AddPageState extends State<AddPage> {
         // ignore: use_build_context_synchronously
         context.read<DoctorFormController>().clearForm();
         // ignore: use_build_context_synchronously
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => MainPage()));
+        Navigator.of(context).pop();
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
